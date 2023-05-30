@@ -1,11 +1,17 @@
 package com.example.jamcam
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
+import android.os.RemoteException
 import android.provider.Settings
+import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -27,7 +33,8 @@ class MainActivity : AppCompatActivity() {
     private var isPermissionsGrantedAlert = false
     private var isPermissionsGrantedForeground = false
 
-
+    private var ableToRecord = false
+    private var isRecording = false
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -35,8 +42,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val startButton: Button = findViewById(R.id.startButton)
-//        val stopButton: Button = findViewById(R.id.stopButton)
+        val startButton: Button = findViewById(R.id.startButton)
+        val stopButton: Button = findViewById(R.id.stopButton)
 
         getMicrophonePermission()
         getCameraPermission()
@@ -44,108 +51,116 @@ class MainActivity : AppCompatActivity() {
         getAlertWindowPermission()
         getForegroundServicePermission()
 
-//        startButton.setOnClickListener { startRecording() }
-//        stopButton.setOnClickListener { stopRecording() }
+        startButton.setOnClickListener { startRecording() }
+        stopButton.setOnClickListener { stopRecording() }
+
     }
 
+
+
     private fun createRecorder() {
-        println("createRecorder")
         val intent = Intent(this, BackgroundVideoRecorder::class.java)
-        println("Here")
         startService(intent)
     }
 
 
-    private fun checkcreateRecorder() {
-        println("checkcreateRecorder")
+    private fun destroyRecorder() {
+        val intent = Intent(this, BackgroundVideoRecorder::class.java)
+        stopService(intent)
+    }
+
+
+    private fun checkCreateRecorder() {
         if (isPermissionsGrantedMicrophone &&
             isPermissionsGrantedCamera &&
             isPermissionsGrantedStorage &&
             isPermissionsGrantedAlert &&
-            isPermissionsGrantedForeground) {
-            createRecorder()
+            isPermissionsGrantedForeground
+        ) {
+            ableToRecord = true
         }
     }
 
 
-//    private fun startRecording() {
-//        if (!isRecording) {
-//            mediaRecorder.start()
-//            isRecording = true
-//        }
-//    }
-//
-//
-//    private fun stopRecording() {
-//        if (isRecording) {
-//            mediaRecorder.stop()
-//            mediaRecorder.reset()
-//            camera.lock()
-//            isRecording = false
-//        }
-//    }
+    private fun startRecording() {
+        if (!isRecording && ableToRecord) {
+            createRecorder()
+            isRecording = true
+        }
+    }
 
+
+    private fun stopRecording() {
+        if (isRecording && ableToRecord) {
+            destroyRecorder()
+            isRecording = false
+        }
+    }
 
 
     private fun getMicrophonePermission() {
         println("getMicrophonePermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO),
-                MICROPHONE_PERMISSION_CODE)
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.RECORD_AUDIO),
+                MICROPHONE_PERMISSION_CODE
+            )
         } else {
             isPermissionsGrantedMicrophone = true
-            checkcreateRecorder()
+            checkCreateRecorder()
         }
     }
+
 
     private fun getCameraPermission() {
         println("getCameraPermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA),
-                CAMERA_PERMISSION_CODE)
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_CODE
+            )
         } else {
             isPermissionsGrantedCamera = true
-            checkcreateRecorder()
+            checkCreateRecorder()
         }
     }
+
 
     private fun getExternalStoragePermission() {
         println("getExternalStoragePermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                WRITE_EXTERNAL_STORAGE_CODE)
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                WRITE_EXTERNAL_STORAGE_CODE
+            )
         } else {
             isPermissionsGrantedStorage = true
-            checkcreateRecorder()
+            checkCreateRecorder()
         }
     }
+
 
     private fun getForegroundServicePermission() {
         println("getForegroundServicePermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE)
-            == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.FOREGROUND_SERVICE),
-                FOREGROUND_SERVICE_CODE)
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.FOREGROUND_SERVICE),
+                FOREGROUND_SERVICE_CODE
+            )
         } else {
             isPermissionsGrantedForeground = true
-            checkcreateRecorder()
+            checkCreateRecorder()
         }
     }
 
-//    private fun getAlertWindowPermission() {
-//        println("getAlertWindowPermission")
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW)
-//            == PackageManager.PERMISSION_DENIED) {
-//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SYSTEM_ALERT_WINDOW),
-//                SYSTEM_ALERT_WINDOW_CODE)
-//        } else {
-//            isPermissionsGrantedAlert = true
-//            checkcreateRecorder()
-//        }
-//    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun getAlertWindowPermission() {
@@ -157,41 +172,52 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Permission already granted
             isPermissionsGrantedAlert = true
-            checkcreateRecorder()
+            checkCreateRecorder()
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == MICROPHONE_PERMISSION_CODE ||
             requestCode == CAMERA_PERMISSION_CODE ||
             requestCode == WRITE_EXTERNAL_STORAGE_CODE ||
             requestCode == SYSTEM_ALERT_WINDOW_CODE ||
-            requestCode == FOREGROUND_SERVICE_CODE) {
+            requestCode == FOREGROUND_SERVICE_CODE
+        ) {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 when (requestCode) {
                     MICROPHONE_PERMISSION_CODE -> {
                         isPermissionsGrantedMicrophone = true
-                        checkcreateRecorder()
+                        checkCreateRecorder()
                     }
+
                     CAMERA_PERMISSION_CODE -> {
                         isPermissionsGrantedCamera = true
-                        checkcreateRecorder()
+                        checkCreateRecorder()
                     }
+
                     WRITE_EXTERNAL_STORAGE_CODE -> {
                         isPermissionsGrantedStorage = true
-                        checkcreateRecorder()
+                        checkCreateRecorder()
                     }
+
                     SYSTEM_ALERT_WINDOW_CODE -> {
                         isPermissionsGrantedAlert = true
-                        checkcreateRecorder()
+                        checkCreateRecorder()
                     }
+
                     FOREGROUND_SERVICE_CODE -> {
                         isPermissionsGrantedForeground = true
-                        checkcreateRecorder()
+                        checkCreateRecorder()
                     }
+
                     else -> {
-                        println("PROBLEM")
+                        println("There is a problem in MainActivity -> onRequestPermissionsResult")
                     }
                 }
 
@@ -201,6 +227,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }
