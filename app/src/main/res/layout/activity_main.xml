@@ -29,9 +29,19 @@
         android:layout_gravity="center" />
 
     <Button
+        android:id="@+id/clickButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Click me!"
         android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textSize="56sp"
+        android:textColor="@color/material_dynamic_primary80"/>
 
 </LinearLayout>

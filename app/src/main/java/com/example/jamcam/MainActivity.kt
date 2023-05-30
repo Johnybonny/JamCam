@@ -1,21 +1,28 @@
 package com.example.jamcam
 
 import android.Manifest
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
-import android.os.RemoteException
+import android.os.Environment
+import android.os.Handler
 import android.provider.Settings
+import android.text.format.DateFormat
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
+import java.io.IOException
+import java.util.Date
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     private var ableToRecord = false
     private var isRecording = false
 
+    private var seconds = 0
+    private var running = false
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +54,9 @@ class MainActivity : AppCompatActivity() {
 
         val startButton: Button = findViewById(R.id.startButton)
         val stopButton: Button = findViewById(R.id.stopButton)
+        val clickButton: Button = findViewById(R.id.clickButton)
+
+        val timeView: TextView = findViewById(R.id.time_view)
 
         getMicrophonePermission()
         getCameraPermission()
@@ -51,9 +64,39 @@ class MainActivity : AppCompatActivity() {
         getAlertWindowPermission()
         getForegroundServicePermission()
 
-        startButton.setOnClickListener { startRecording() }
+        startButton.setOnClickListener { startRecording(timeView) }
         stopButton.setOnClickListener { stopRecording() }
+        clickButton.setOnClickListener { computeInitTime() }
 
+    }
+
+
+    private fun computeInitTime() {
+        val tim = UtilityClass.readTimestamp(this, "timer_start.txt")
+        val cam = UtilityClass.readTimestamp(this, "camera_start.txt")
+        if (tim != null && cam != null) {
+            val diff = UtilityClass.differenceInSeconds(tim, cam)
+            println("DIFFERENCE: $diff")
+        }
+    }
+
+
+    private fun runTimer(timeView: TextView) {
+        val handler = Handler()
+        running = true
+
+        UtilityClass.saveTimestamp(this,
+            "timer_start.txt")
+
+        handler.post(object : Runnable {
+            override fun run() {
+                timeView.text = seconds.toString()
+                if (running) {
+                    seconds++
+                }
+                handler.postDelayed(this, 1000)
+            }
+        })
     }
 
 
@@ -82,8 +125,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun startRecording() {
+    private fun startRecording(timeView: TextView) {
         if (!isRecording && ableToRecord) {
+            runTimer(timeView)
             createRecorder()
             isRecording = true
         }
@@ -96,6 +140,18 @@ class MainActivity : AppCompatActivity() {
             isRecording = false
         }
     }
+
+
+
+
+    fun getVideosDirectoryPath(): File {
+        val appVideosFolder = File(Environment.getExternalStorageDirectory(), "/JamCam/")
+
+        // Create app-private folder if not exists
+        if (!appVideosFolder.exists()) appVideosFolder.mkdir()
+        return appVideosFolder
+    }
+
 
 
     private fun getMicrophonePermission() {

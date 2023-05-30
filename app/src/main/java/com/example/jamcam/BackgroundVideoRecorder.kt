@@ -42,6 +42,7 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
     private lateinit var notificationBuilder: Notification.Builder
     private lateinit var notificationManager: NotificationManager
 
+
     override fun onCreate() {
             val handler = Handler()
             handler.post {
@@ -97,12 +98,10 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
                 if (isRecording) {
                     println("10 seconds passed")
                     stopRecording()
-                    startRecording(surfaceHolder)
                 }
             }
         }, 0, recordingDuration)
 
-        // Start the initial recording
         startRecording(surfaceHolder)
     }
 
@@ -119,17 +118,20 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
 
         val outputFilePath = "${Environment.getExternalStoragePublicDirectory(DIRECTORY_MOVIES)}/" +
                 "${DateFormat.format("yyyy-MM-dd_kk-mm-ss", Date().time)}.mp4"
+//        val outputFilePath = "${Environment.getExternalStorageDirectory()}/JamCam/" +
+//                "${DateFormat.format("yyyy-MM-dd_kk-mm-ss", Date().time)}.mp4"
         mediaRecorder?.setOutputFile(outputFilePath)
     }
 
 
     private fun startRecording(surfaceHolder: SurfaceHolder) {
+        println("Start of recording")
         if(!isRecording){
             initialize(surfaceHolder)
-
             try {
                 mediaRecorder?.prepare()
                 mediaRecorder?.start()
+                UtilityClass.saveTimestamp(this, "camera_start.txt")
                 isRecording = true
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -138,7 +140,7 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
     }
 
     private fun stopRecording() {
-        println("stopped")
+        println("Stop of recording")
         if (isRecording) {
             try {
                 mediaRecorder?.stop()
@@ -147,23 +149,11 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
             }
 
             isRecording = false
-            println("Officially stopped")
         }
         mediaRecorder?.reset()
         mediaRecorder?.release()
         mediaRecorder = null
 
-//        if (isRecording) {
-//            try {
-//                mediaRecorder?.stop()
-//            } catch (e: RuntimeException) {
-//                e.printStackTrace()
-//            }
-//
-//            mediaRecorder?.reset()
-//            isRecording = false
-//
-//        }
     }
 
 
@@ -175,19 +165,6 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
     // Stop recording and remove SurfaceView
     override fun onDestroy() {
         super.onDestroy()
-//        if (isRecording) {
-//            try {
-//                mediaRecorder?.stop()
-//            } catch (e: RuntimeException) {
-//                e.printStackTrace()
-//            }
-//
-//            isRecording = false
-//        }
-//        mediaRecorder?.reset()
-//        mediaRecorder?.release()
-//        mediaRecorder = null
-
         stopRecording()
 
         camera?.lock()
