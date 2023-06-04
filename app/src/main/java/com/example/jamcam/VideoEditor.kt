@@ -2,19 +2,12 @@ package com.example.jamcam
 
 import android.content.ContentValues
 import android.content.Context
-import android.os.Build
-import android.os.Environment
-import android.text.format.DateFormat
 import android.util.Log
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException
-import java.io.File
-import java.io.RandomAccessFile
-import java.nio.channels.FileChannel
-import java.util.Date
 
 class VideoEditor(private val directoryName: String, private val fileName: String) {
 

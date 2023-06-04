@@ -8,26 +8,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.hardware.Camera
-import android.text.format.DateFormat
 import android.media.CamcorderProfile
 import android.media.MediaRecorder
-import android.os.Binder
 import android.os.Build
-import android.os.Environment
-import android.os.Environment.DIRECTORY_MOVIES
 import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.WindowManager
-import android.widget.Toast
-import kotlinx.coroutines.NonCancellable.start
-import java.util.Date
-import java.util.Timer
-import java.util.TimerTask
 
 class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
 
