@@ -89,18 +89,6 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
 
     // Method called right after Surface created (initializing and starting MediaRecorder)
     override fun surfaceCreated(surfaceHolder: SurfaceHolder) {
-        // Create a Timer to schedule the recording duration
-        val timer = Timer()
-        val recordingDuration = 10000L // 10 seconds
-
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                if (isRecording) {
-                    println("10 seconds passed")
-                    stopRecording()
-                }
-            }
-        }, 0, recordingDuration)
 
         startRecording(surfaceHolder)
     }
@@ -116,11 +104,11 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
         mediaRecorder?.setVideoSource(MediaRecorder.VideoSource.CAMERA)
         mediaRecorder?.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH))
 
-        val outputFilePath = "${Environment.getExternalStoragePublicDirectory(DIRECTORY_MOVIES)}/" +
-                "${DateFormat.format("yyyy-MM-dd_kk-mm-ss", Date().time)}.mp4"
-//        val outputFilePath = "${Environment.getExternalStorageDirectory()}/JamCam/" +
-//                "${DateFormat.format("yyyy-MM-dd_kk-mm-ss", Date().time)}.mp4"
-        mediaRecorder?.setOutputFile(outputFilePath)
+        // Set the desired orientation
+        mediaRecorder?.setOrientationHint(90) // 90 degrees for vertical orientation
+
+        val path = applicationContext.filesDir.path
+        mediaRecorder!!.setOutputFile("${path}/original.mp4")
     }
 
 
@@ -187,15 +175,7 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
     override fun surfaceDestroyed(surfaceHolder: SurfaceHolder) {}
 
 
-    inner class MyBinder : Binder() {
-        fun getService(): BackgroundVideoRecorder {
-            return this@BackgroundVideoRecorder
-        }
-    }
-
-
     override fun onBind(intent: Intent): IBinder? {
-//        return MyBinder()
         return null
     }
 

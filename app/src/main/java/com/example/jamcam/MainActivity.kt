@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -21,8 +22,9 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.Date
-
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,13 +32,15 @@ class MainActivity : AppCompatActivity() {
     private val MICROPHONE_PERMISSION_CODE = 201
     private val CAMERA_PERMISSION_CODE = 202
     private val WRITE_EXTERNAL_STORAGE_CODE = 203
-    private val SYSTEM_ALERT_WINDOW_CODE = 204
-    private val FOREGROUND_SERVICE_CODE = 205
+    private val READ_EXTERNAL_STORAGE_CODE = 204
+    private val SYSTEM_ALERT_WINDOW_CODE = 205
+    private val FOREGROUND_SERVICE_CODE = 206
 
 
     private var isPermissionsGrantedMicrophone = false
     private var isPermissionsGrantedCamera = false
-    private var isPermissionsGrantedStorage = false
+    private var isPermissionsGrantedStorageRead = false
+    private var isPermissionsGrantedStorageWrite = false
     private var isPermissionsGrantedAlert = false
     private var isPermissionsGrantedForeground = false
 
@@ -45,6 +49,9 @@ class MainActivity : AppCompatActivity() {
 
     private var seconds = 0
     private var running = false
+
+    private val timestamps = ArrayList<Int>()
+    private val highlightLength: Int = 10
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -60,33 +67,29 @@ class MainActivity : AppCompatActivity() {
 
         getMicrophonePermission()
         getCameraPermission()
-        getExternalStoragePermission()
+        getReadExternalStoragePermission()
+        getWriteExternalStoragePermission()
         getAlertWindowPermission()
         getForegroundServicePermission()
 
         startButton.setOnClickListener { startRecording(timeView) }
         stopButton.setOnClickListener { stopRecording() }
-        clickButton.setOnClickListener { computeInitTime() }
-
+        clickButton.setOnClickListener { reportHighlight() }
     }
 
-
-    private fun computeInitTime() {
-        val tim = UtilityClass.readTimestamp(this, "timer_start.txt")
+    private fun reportHighlight() {
+        val now = UtilityClass.now()
         val cam = UtilityClass.readTimestamp(this, "camera_start.txt")
-        if (tim != null && cam != null) {
-            val diff = UtilityClass.differenceInSeconds(tim, cam)
-            println("DIFFERENCE: $diff")
+        if (cam != null) {
+            val diff = UtilityClass.differenceInSeconds(now, cam)
+            timestamps.add(diff.toInt())
         }
     }
-
 
     private fun runTimer(timeView: TextView) {
         val handler = Handler()
         running = true
 
-        UtilityClass.saveTimestamp(this,
-            "timer_start.txt")
 
         handler.post(object : Runnable {
             override fun run() {
@@ -99,31 +102,27 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
-
     private fun createRecorder() {
         val intent = Intent(this, BackgroundVideoRecorder::class.java)
         startService(intent)
     }
-
 
     private fun destroyRecorder() {
         val intent = Intent(this, BackgroundVideoRecorder::class.java)
         stopService(intent)
     }
 
-
     private fun checkCreateRecorder() {
         if (isPermissionsGrantedMicrophone &&
             isPermissionsGrantedCamera &&
-            isPermissionsGrantedStorage &&
+            isPermissionsGrantedStorageRead &&
+            isPermissionsGrantedStorageWrite &&
             isPermissionsGrantedAlert &&
             isPermissionsGrantedForeground
         ) {
             ableToRecord = true
         }
     }
-
 
     private fun startRecording(timeView: TextView) {
         if (!isRecording && ableToRecord) {
@@ -133,25 +132,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun stopRecording() {
         if (isRecording && ableToRecord) {
             destroyRecorder()
             isRecording = false
+            createHighlights()
         }
     }
 
+    private fun createHighlights() {
+        val videoEditor = VideoEditor("JamCam", "original.mp4")
+        for(startTime in timestamps) {
+            val start = UtilityClass.secondsToTimestamp(startTime)
+            val stop = UtilityClass.addTime(start, highlightLength)
+            videoEditor.createHighlight(this, start, stop)
+        }
 
-
-
-    fun getVideosDirectoryPath(): File {
-        val appVideosFolder = File(Environment.getExternalStorageDirectory(), "/JamCam/")
-
-        // Create app-private folder if not exists
-        if (!appVideosFolder.exists()) appVideosFolder.mkdir()
-        return appVideosFolder
     }
-
 
 
     private fun getMicrophonePermission() {
@@ -169,7 +166,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun getCameraPermission() {
         println("getCameraPermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -185,9 +181,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun getExternalStoragePermission() {
-        println("getExternalStoragePermission")
+    private fun getWriteExternalStoragePermission() {
+        println("getWriteExternalStoragePermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             == PackageManager.PERMISSION_DENIED
         ) {
@@ -196,27 +191,42 @@ class MainActivity : AppCompatActivity() {
                 WRITE_EXTERNAL_STORAGE_CODE
             )
         } else {
-            isPermissionsGrantedStorage = true
+            isPermissionsGrantedStorageWrite = true
             checkCreateRecorder()
         }
     }
 
+    private fun getReadExternalStoragePermission() {
+        println("getExternalStoragePermission")
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                READ_EXTERNAL_STORAGE_CODE
+            )
+        } else {
+            isPermissionsGrantedStorageRead = true
+            checkCreateRecorder()
+        }
+    }
 
     private fun getForegroundServicePermission() {
         println("getForegroundServicePermission")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE)
             == PackageManager.PERMISSION_DENIED
         ) {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.FOREGROUND_SERVICE),
-                FOREGROUND_SERVICE_CODE
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(Manifest.permission.FOREGROUND_SERVICE),
+                    FOREGROUND_SERVICE_CODE
+                )
+            }
         } else {
             isPermissionsGrantedForeground = true
             checkCreateRecorder()
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun getAlertWindowPermission() {
@@ -232,7 +242,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -242,6 +251,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == MICROPHONE_PERMISSION_CODE ||
             requestCode == CAMERA_PERMISSION_CODE ||
             requestCode == WRITE_EXTERNAL_STORAGE_CODE ||
+            requestCode == READ_EXTERNAL_STORAGE_CODE ||
             requestCode == SYSTEM_ALERT_WINDOW_CODE ||
             requestCode == FOREGROUND_SERVICE_CODE
         ) {
@@ -258,7 +268,12 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     WRITE_EXTERNAL_STORAGE_CODE -> {
-                        isPermissionsGrantedStorage = true
+                        isPermissionsGrantedStorageWrite = true
+                        checkCreateRecorder()
+                    }
+
+                    READ_EXTERNAL_STORAGE_CODE -> {
+                        isPermissionsGrantedStorageRead = true
                         checkCreateRecorder()
                     }
 
