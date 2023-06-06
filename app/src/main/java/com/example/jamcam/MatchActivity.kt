@@ -30,9 +30,12 @@ class MatchActivity : AppCompatActivity() {
         val clickButton: Button = findViewById(R.id.clickButton)
 
         val timeView: TextView = findViewById(R.id.time_view)
+        startRecording(timeView)
+
+        val playerList = intent.getSerializableExtra("playerList") as? ArrayList<PlayersFragment.Player>
+        val matchDescription = intent.getStringExtra("matchDescription")
 
 
-        startButton.setOnClickListener { startRecording(timeView) }
         stopButton.setOnClickListener { stopRecording() }
         clickButton.setOnClickListener { reportHighlight() }
     }
