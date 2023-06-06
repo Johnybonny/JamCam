@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -19,27 +21,42 @@ class MatchActivity : AppCompatActivity() {
     private val timestamps = ArrayList<Int>()
     private val highlightLength: Int = 10
 
+    private var playersList: MutableList<PlayersFragment.Player>? = mutableListOf()
+    private var matchDescription: String? = null
+
+    private lateinit var playerSpinner: Spinner
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
 
-        val startButton: Button = findViewById(R.id.startButton)
-        val stopButton: Button = findViewById(R.id.stopButton)
+        val endButton: Button = findViewById(R.id.endButton)
         val clickButton: Button = findViewById(R.id.clickButton)
 
         val timeView: TextView = findViewById(R.id.time_view)
         startRecording(timeView)
 
-        val playerList = intent.getSerializableExtra("playerList") as? ArrayList<PlayersFragment.Player>
-        val matchDescription = intent.getStringExtra("matchDescription")
+        playersList =
+            (intent.getSerializableExtra("playersList") as? ArrayList<PlayersFragment.Player>)
+        matchDescription = intent.getStringExtra("matchDescription")
+
+        playerSpinner = findViewById(R.id.playerSpinner)
+
+        // Get the player names from the playersList
+        val playerLastNames =
+            playersList?.map { "${it.firstName} ${it.lastName} (${it.number})" } ?: emptyList()
+
+        // Create an ArrayAdapter and set it as the Spinner adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, playerLastNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        playerSpinner.adapter = adapter
 
 
-        stopButton.setOnClickListener { stopRecording() }
+        endButton.setOnClickListener { stopRecording() }
         clickButton.setOnClickListener { reportHighlight() }
     }
-
 
 
     private fun reportHighlight() {
@@ -47,7 +64,12 @@ class MatchActivity : AppCompatActivity() {
         val cam = UtilityClass.readTimestamp(this, "camera_start.txt")
         if (cam != null) {
             val diff = UtilityClass.differenceInSeconds(now, cam)
-            timestamps.add(diff.toInt())
+            if (diff >= highlightLength) {
+                timestamps.add(diff.toInt())
+            } else {
+                timestamps.add(highlightLength)
+            }
+
         }
     }
 
@@ -96,13 +118,12 @@ class MatchActivity : AppCompatActivity() {
     private fun createHighlights() {
         val videoEditor = VideoEditor("JamCam", "original.mp4")
         for (startTime in timestamps) {
-            val start = UtilityClass.secondsToTimestamp(startTime)
-            val stop = UtilityClass.addTime(start, highlightLength)
+            val stop = UtilityClass.secondsToTimestamp(startTime)
+            val start = UtilityClass.substractTime(stop, highlightLength)
             videoEditor.createHighlight(this, start, stop)
         }
 
     }
-
 
 
 }

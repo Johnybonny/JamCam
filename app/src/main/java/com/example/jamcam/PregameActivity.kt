@@ -26,11 +26,11 @@ class PregameActivity : AppCompatActivity() {
     private fun startMatch() {
         val intent = Intent(this, MatchActivity::class.java)
 
-        val playerList =
-            (supportFragmentManager.findFragmentById(R.id.fragment_container) as? PlayersFragment)?.getPlayerList()
+        val playersList =
+            (supportFragmentManager.findFragmentById(R.id.fragment_container) as? PlayersFragment)?.getPlayersList()
         val descriptionEditText = findViewById<EditText>(R.id.descriptionEditText)
         val matchDescription: String =descriptionEditText.text.toString()
-        intent.putExtra("playerList", ArrayList(playerList))
+        intent.putExtra("playersList", ArrayList(playersList))
         intent.putExtra("matchDescription", matchDescription)
 
         startActivity(intent)

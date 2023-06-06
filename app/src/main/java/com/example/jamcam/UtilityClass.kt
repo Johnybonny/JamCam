@@ -97,12 +97,12 @@ class UtilityClass {
         }
 
         @JvmStatic
-        fun addTime(initialTime: String, secondsToAdd: Int): String {
+        fun substractTime(initialTime: String, secondsToSubstract: Int): String {
             val parts = initialTime.split(":")
             val minutes = parts[0].toInt()
             val seconds = parts[1].toInt()
 
-            val totalSeconds = minutes * 60 + seconds + secondsToAdd
+            val totalSeconds = minutes * 60 + seconds - secondsToSubstract
 
             return secondsToTimestamp(totalSeconds)
         }

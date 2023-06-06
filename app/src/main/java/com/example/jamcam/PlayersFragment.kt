@@ -15,7 +15,7 @@ import java.io.Serializable
 
 class PlayersFragment : Fragment() {
     private lateinit var playerAdapter: PlayerAdapter
-    private val playerList: MutableList<Player> = mutableListOf()
+    private val playersList: MutableList<Player> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +24,7 @@ class PlayersFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_players, container, false)
 
         // Initialize the adapter and set it to the ListView
-        playerAdapter = PlayerAdapter(requireContext(), playerList)
+        playerAdapter = PlayerAdapter(requireContext(), playersList)
         val listView: ListView = view.findViewById(R.id.listView_players)
         listView.adapter = playerAdapter
 
@@ -37,8 +37,8 @@ class PlayersFragment : Fragment() {
         return view
     }
 
-    fun getPlayerList(): MutableList<Player> {
-        return playerList
+    fun getPlayersList(): MutableList<Player> {
+        return playersList
     }
 
 
@@ -53,7 +53,7 @@ class PlayersFragment : Fragment() {
 
         if (firstName.isNotEmpty() && lastName.isNotEmpty() && number.isNotEmpty()) {
             val player = Player(firstName, lastName, number)
-            playerList.add(player)
+            playersList.add(player)
             playerAdapter.notifyDataSetChanged()
 
             // Clear input fields
@@ -95,7 +95,7 @@ class PlayersFragment : Fragment() {
         }
 
         private fun removePlayer(position: Int) {
-            playerList.removeAt(position)
+            playersList.removeAt(position)
             notifyDataSetChanged()
         }
     }
