@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.round
 
 class UtilityClass {
     companion object {
@@ -113,6 +114,15 @@ class UtilityClass {
             val newSeconds = seconds % 60
 
             return String.format("%02d:%02d", newMinutes, newSeconds)
+        }
+
+        @JvmStatic
+        fun roundPercentage(number: Double, prec: Int): Double {
+            var divider = 1
+            for(i in 1..prec){
+                divider *= 10
+            }
+            return round(number * divider)
         }
 
     }

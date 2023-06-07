@@ -52,7 +52,21 @@ class PlayersFragment : Fragment() {
         val number = numberEditText.text.toString().trim()
 
         if (firstName.isNotEmpty() && lastName.isNotEmpty() && number.isNotEmpty()) {
-            val player = Player(firstName, lastName, number)
+            val player = Player(
+                firstName,
+                lastName,
+                number,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0)
             playersList.add(player)
             playerAdapter.notifyDataSetChanged()
 
@@ -100,6 +114,20 @@ class PlayersFragment : Fragment() {
         }
     }
 
-    data class Player(val firstName: String, val lastName: String, val number: String) :
+    data class Player(
+        val firstName: String,
+        val lastName: String,
+        val number: String, var oneAttempted: Int,
+        var oneScored: Int,
+        var twoAttempted: Int,
+        var twoScored: Int,
+        var threeAttempted: Int,
+        var threeScored: Int,
+        var assists: Int,
+        var blocks: Int,
+        var steals: Int,
+        var fouls: Int,
+        var rebounds: Int
+    ) :
         Serializable
 }
