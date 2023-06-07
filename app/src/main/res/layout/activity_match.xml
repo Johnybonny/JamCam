@@ -8,28 +8,62 @@
     android:orientation="vertical"
     tools:context=".MatchActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="end">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/time_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="02:55"
-            android:textAppearance="@android:style/TextAppearance.Large"
-            android:textSize="50sp" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="2">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Match length" />
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="50sp"
+                android:text="Name of the game"/>
 
+            <TextView
+                android:id="@+id/placeText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="30sp"
+                android:text="Place of the game"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/time_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02:55"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textSize="50sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Match length" />
+
+        </LinearLayout>
     </LinearLayout>
+
+
 
 
     <Button

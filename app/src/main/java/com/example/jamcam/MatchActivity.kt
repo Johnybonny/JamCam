@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -14,15 +16,21 @@ import androidx.appcompat.app.AppCompatActivity
 class MatchActivity : AppCompatActivity() {
 
     private var isRecording = false
+    private var match: Match? = null
+    private var matchId = 0
 
     private var seconds = 0
     private var running = false
 
     private val timestamps = ArrayList<Int>()
-    private val highlightLength: Int = 10
+    private var timestampCounter = 0
+    private val highlightLength: Int = 10 //TODO: Wybierane w ustawieniach
+
+    val chosenTypes = listOf("block", "assist", "two-pointer") //TODO: Wybierane w ustawieniach
 
     private var playersList: MutableList<PlayersFragment.Player>? = mutableListOf()
-    private var matchDescription: String? = null
+    var selectedPlayerName: String? = null
+
 
     private lateinit var playerSpinner: Spinner
 
@@ -32,30 +40,90 @@ class MatchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
 
-        val endButton: Button = findViewById(R.id.endButton)
-        val clickButton: Button = findViewById(R.id.clickButton)
 
+        // Match description
+        val descriptionText: TextView = findViewById(R.id.descriptionText)
+        val matchDescription = intent.getStringExtra("matchDescription")
+        descriptionText.text = matchDescription
+
+        // Match place
+        val placeText: TextView = findViewById(R.id.placeText)
+        val matchPlace = intent.getStringExtra("matchPlace")
+        placeText.text = matchPlace
+
+        // Timer
         val timeView: TextView = findViewById(R.id.time_view)
         startRecording(timeView)
 
+        // Players spinner
         playersList =
             (intent.getSerializableExtra("playersList") as? ArrayList<PlayersFragment.Player>)
-        matchDescription = intent.getStringExtra("matchDescription")
-
         playerSpinner = findViewById(R.id.playerSpinner)
-
-        // Get the player names from the playersList
-        val playerLastNames =
+        val players =
             playersList?.map { "${it.firstName} ${it.lastName} (${it.number})" } ?: emptyList()
-
-        // Create an ArrayAdapter and set it as the Spinner adapter
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, playerLastNames)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, players)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         playerSpinner.adapter = adapter
+        playerSpinner.setSelection(0)
+        playerSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedPlayerName = players[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                selectedPlayerName = null
+            }
+        }
 
 
+        // Buttons
+        val endButton: Button = findViewById(R.id.endButton)
         endButton.setOnClickListener { stopRecording() }
+
+        val clickButton: Button = findViewById(R.id.clickButton)
         clickButton.setOnClickListener { reportHighlight() }
+
+        val twoPointerButton: Button = findViewById(R.id.twoPointerButton)
+        twoPointerButton.setOnClickListener { eventOccured("two-pointer") }
+
+
+        // Create a match record in database
+        initializeMatch(matchDescription.toString(), matchPlace.toString())
+
+
+    }
+
+    private fun initializeMatch(matchDescription: String, matchPlace: String) {
+        val dbHandler = DBHandler(this, null, null, 1)
+
+        val date = UtilityClass.now().split("_")[0]
+        println("$matchDescription, $matchPlace, $date")
+        match = Match(matchDescription, matchPlace, date)
+        matchId = dbHandler.addMatch(match!!).toInt()
+
+    }
+
+
+    private fun eventOccured(eventType: String) {
+        // Handle the highlights
+        var videoName = "no_video"
+        if (eventType in chosenTypes) {
+            reportHighlight()
+            videoName = "trimmed${matchId}_$timestampCounter.mp4"
+        }
+
+
+        val dbHandler = DBHandler(this, null, null, 1)
+        timestampCounter += 1
+        if (match != null && selectedPlayerName != null) {
+            val event = Event(matchId, eventType, selectedPlayerName!!, videoName)
+            dbHandler.addEvent(event)
+        }
     }
 
 
@@ -69,7 +137,6 @@ class MatchActivity : AppCompatActivity() {
             } else {
                 timestamps.add(highlightLength)
             }
-
         }
     }
 
@@ -111,6 +178,7 @@ class MatchActivity : AppCompatActivity() {
         if (isRecording) {
             destroyRecorder()
             isRecording = false
+            timestampCounter = 0
             createHighlights()
         }
     }
@@ -120,7 +188,9 @@ class MatchActivity : AppCompatActivity() {
         for (startTime in timestamps) {
             val stop = UtilityClass.secondsToTimestamp(startTime)
             val start = UtilityClass.substractTime(stop, highlightLength)
-            videoEditor.createHighlight(this, start, stop)
+            val outputName = "trimmed${matchId}_$timestampCounter.mp4"
+            timestampCounter += 1
+            videoEditor.createHighlight(this, start, stop, outputName)
         }
 
     }

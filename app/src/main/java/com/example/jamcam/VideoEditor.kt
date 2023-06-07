@@ -12,7 +12,7 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedExceptio
 class VideoEditor(private val directoryName: String, private val fileName: String) {
 
 
-    fun createHighlight(context: Context, start: String, stop: String) {
+    fun createHighlight(context: Context, start: String, stop: String, outputName: String) {
         println("STARTING $start")
         val ffmpeg = FFmpeg.getInstance(context)
         try {
@@ -25,7 +25,7 @@ class VideoEditor(private val directoryName: String, private val fileName: Strin
                     Log.d("FFmpeg", "onSuccess")
                     val dirPath: String = context.filesDir.path
                     val input = "${dirPath}/$fileName"
-                    val output = "${dirPath}/trimmed$start.mp4"
+                    val output = "${dirPath}/$outputName"
                     val command = arrayOf("-y", "-i", input, "-ss", start, "-to", stop, "-c", "copy", output)
                     try {
                         ffmpeg.execute(command, object : ExecuteBinaryResponseHandler() {
