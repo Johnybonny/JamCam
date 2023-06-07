@@ -248,7 +248,8 @@
                 android:layout_height="0dp"
                 android:text="End Match"
                 android:layout_weight="1"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button"/>
 
             <Button
                 android:id="@+id/undoButton"
@@ -256,15 +257,9 @@
                 android:layout_height="0dp"
                 android:text="Undo"
                 android:layout_weight="1"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button"/>
 
-            <Button
-                android:id="@+id/somethingButton"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:text="Something"
-                android:layout_weight="1"
-                android:layout_margin="5dp"/>
 
 
         </LinearLayout>
@@ -286,7 +281,8 @@
                     android:layout_height="80dp"
                     android:text="+2"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
             </LinearLayout>
 
@@ -301,7 +297,8 @@
                     android:layout_height="80dp"
                     android:text="+1"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
                 <Button
                     android:id="@+id/threePointerButton"
@@ -309,7 +306,8 @@
                     android:layout_height="80dp"
                     android:text="+3"
                     android:layout_weight="2"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
             </LinearLayout>
 
@@ -324,7 +322,8 @@
                     android:layout_height="80dp"
                     android:text="Foul"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
                 <Button
                     android:id="@+id/reboundButton"
@@ -332,7 +331,8 @@
                     android:layout_height="80dp"
                     android:text="Rebound"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
             </LinearLayout>
 
@@ -347,7 +347,8 @@
                     android:layout_height="80dp"
                     android:text="Assist"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
                 <Button
                     android:id="@+id/blockButton"
@@ -355,7 +356,8 @@
                     android:layout_height="80dp"
                     android:text="Block"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
                 <Button
                     android:id="@+id/stealButton"
@@ -363,7 +365,8 @@
                     android:layout_height="80dp"
                     android:text="Steal"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_button"/>
 
             </LinearLayout>
 
