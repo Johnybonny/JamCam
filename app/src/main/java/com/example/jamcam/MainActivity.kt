@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val startPregameButton: Button = findViewById(R.id.startPregameButton)
+        val startPregameButton: ImageButton = findViewById(R.id.btnNewMatch)
 
         if (!checkPermissionForSystemAlertWindow()) return
 
