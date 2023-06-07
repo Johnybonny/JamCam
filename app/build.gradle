@@ -16,6 +16,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildFeatures {
+        viewBinding true
+    }
 
     buildTypes {
         release {
@@ -46,4 +49,6 @@ dependencies {
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
 
     implementation 'com.google.android.material:material:1.9.0'
+
+    implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
 }
