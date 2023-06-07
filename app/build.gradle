@@ -44,4 +44,6 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+
+    implementation 'com.google.android.material:material:1.9.0'
 }

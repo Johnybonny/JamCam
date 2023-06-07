@@ -8,7 +8,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -34,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val startPregameButton: ImageButton = findViewById(R.id.btnNewMatch)
+        val btnStartPregame: ImageButton = findViewById(R.id.btnNewMatch)
+        val btnReplays: ImageButton = findViewById(R.id.btnReplays)
 
         if (!checkPermissionForSystemAlertWindow()) return
 
@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
             grantPermissions()
         }
 
-        startPregameButton.setOnClickListener { startPregame() }
+        btnStartPregame.setOnClickListener { startPregame() }
+        btnReplays.setOnClickListener { startReplays() }
     }
 
     private fun grantPermissions() {
@@ -130,6 +131,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
 
+    private fun startReplays() {
+        val intent = Intent(this, ReplaysActivity::class.java)
+        startActivity(intent)
     }
 }
