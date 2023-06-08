@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.videorecorder
 
 import android.content.ContentValues
 import android.content.Context
@@ -13,7 +13,6 @@ class VideoEditor(private val directoryName: String, private val fileName: Strin
 
 
     fun createHighlight(context: Context, start: String, stop: String, outputName: String) {
-        println("STARTING $start")
         val ffmpeg = FFmpeg.getInstance(context)
         try {
             ffmpeg.loadBinary(object : FFmpegLoadBinaryResponseHandler {

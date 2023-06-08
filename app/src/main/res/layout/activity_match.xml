@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:orientation="vertical"
     tools:context=".MatchActivity">
 
     <LinearLayout
@@ -17,33 +17,32 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/descriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Name of the game"/>
+                android:text="Name of the game"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/placeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="Place of the game"/>
+                android:text="Place of the game"
+                android:textSize="12sp" />
 
         </LinearLayout>
-
 
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="end">
+            android:gravity="end"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/time_view"
@@ -152,8 +151,8 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView
@@ -227,39 +226,46 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/movesRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/endButton"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:text="End Match"
-                android:layout_weight="1"
                 android:layout_margin="5dp"
-                android:background="@drawable/custom_button"/>
+                android:layout_weight="1"
+                android:background="@drawable/custom_button"
+                android:text="End Match" />
 
             <Button
                 android:id="@+id/undoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:text="Undo"
-                android:layout_weight="1"
                 android:layout_margin="5dp"
-                android:background="@drawable/custom_button"/>
-
+                android:layout_weight="1"
+                android:background="@drawable/custom_button"
+                android:text="Undo" />
 
 
         </LinearLayout>
@@ -267,22 +273,22 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="4">
+            android:layout_weight="4"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/twoPointerButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="+2"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="+2" />
 
             </LinearLayout>
 
@@ -291,23 +297,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/onePointerButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="+1"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="+1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/threePointerButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="+3"
-                    android:layout_weight="2"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="2"
+                    android:background="@drawable/custom_button"
+                    android:text="+3" />
 
             </LinearLayout>
 
@@ -316,23 +322,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/foulButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="Foul"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="Foul" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/reboundButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="Rebound"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="Rebound" />
 
             </LinearLayout>
 
@@ -341,32 +347,32 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/assistButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="Assist"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="Assist" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/blockButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="Block"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="Block" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/stealButton"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
-                    android:text="Steal"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:background="@drawable/custom_button"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:text="Steal" />
 
             </LinearLayout>
 

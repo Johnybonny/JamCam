@@ -51,24 +51,9 @@ class DBHandler(
         onCreate(db)
     }
 
-//    fun getNewMatchId(): Int {
-//        val query = "SELECT * FROM $TABLE_MATCHES"
-//        val db = this.writableDatabase
-//        val cursor = db.rawQuery(query, null)
-//        cursor.moveToFirst()
-//        var id = 1
-//        while (!cursor.isAfterLast) {
-//            id = cursor.getInt(0)
-//        }
-//        cursor.close()
-//        db.close()
-//        println(id)
-//        return id + 1
-//    }
 
     fun addMatch(match: Match): Long {
         val values = ContentValues()
-//        values.put(COLUMN_ID, match.id)
         values.put(COLUMN_DESCRIPTION, match.description)
         values.put(COLUMN_PLACE, match.place)
         values.put(COLUMN_DATE, match.date)
@@ -94,47 +79,46 @@ class DBHandler(
         db.close()
     }
 
-//    fun findRecipe(id: Int): Recipe? {
-//        val query = "SELECT * FROM $TABLE_RECIPES WHERE $COLUMN_ID LIKE \"$id\""
-//        val db = this.writableDatabase
-//        val cursor = db.rawQuery(query, null)
-//        var recipe: Recipe? = null
-//        if (cursor.moveToFirst()) {
-//            val id = cursor.getInt(0)
-//            val name = cursor.getString(1)
-//            val ingredients = cursor.getString(2)
-//            val actions = cursor.getString(3)
-//            val minutes = cursor.getInt(4)
-//            val imageId = cursor.getInt(5)
-//            val type = cursor.getString(6)
-//            recipe = Recipe(id, name, ingredients, actions, minutes, imageId, type)
-//            cursor.close()
-//        }
-//        db.close()
-//        return recipe
-//    }
-//
-//    fun getAllRecipes():MutableList<Recipe> {
-//        val query = "SELECT * FROM $TABLE_RECIPES"
-//        val db = this.writableDatabase
-//        val cursor = db.rawQuery(query, null)
-//        val list: MutableList<Recipe> = mutableListOf()
-//        var recipe: Recipe? = null
-//        cursor.moveToFirst()
-//        while (!cursor.isAfterLast) {
-//            val id = cursor.getInt(0)
-//            val name = cursor.getString(1)
-//            val ingredients = cursor.getString(2)
-//            val actions = cursor.getString(3)
-//            val minutes = cursor.getInt(4)
-//            val imageId = cursor.getInt(5)
-//            val type = cursor.getString(6)
-//            recipe = Recipe(id, name, ingredients, actions, minutes, imageId, type)
-//            list.add(recipe)
-//            cursor.moveToNext()
-//        }
-//        cursor.close()
-//        db.close()
-//        return list
-//    }
+    fun findEventId(matchId: Int, eventType: String, player: String, video: String): Int {
+        val query =
+            "SELECT * FROM $TABLE_EVENTS WHERE $COLUMN_MATCHID LIKE \"$matchId\" AND $COLUMN_EVENTTYPE LIKE \"$eventType\" AND $COLUMN_PLAYER LIKE \"$player\" AND $COLUMN_VIDEO LIKE \"$video\""
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        var id = -1
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(0)
+            cursor.close()
+        }
+        db.close()
+        return id
+    }
+
+    fun deleteEvent(id: Int) {
+        val db = this.writableDatabase
+        val whereClause = "$COLUMN_ID_AUTO=?"
+        val whereArgs = arrayOf(id.toString())
+        db.delete(TABLE_EVENTS, whereClause, whereArgs)
+        db.close()
+    }
+
+    fun getAllEvents():MutableList<Event> {
+        val query = "SELECT * FROM $TABLE_EVENTS"
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        val list: MutableList<Event> = mutableListOf()
+        var event: Event? = null
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            val matchId = cursor.getInt(1)
+            val eventType = cursor.getString(2)
+            val player = cursor.getString(3)
+            val video = cursor.getString(4)
+            event = Event(matchId, eventType, player, video)
+            list.add(event)
+            cursor.moveToNext()
+        }
+        cursor.close()
+        db.close()
+        return list
+    }
 }

@@ -16,6 +16,10 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.videorecorder.BackgroundVideoRecorder
+import com.example.jamcam.videorecorder.VideoEditor
 import java.util.ArrayDeque
 
 class MatchActivity : AppCompatActivity() {
@@ -39,8 +43,11 @@ class MatchActivity : AppCompatActivity() {
     private var seconds = 0
 
     // Highlights
-    private val timestamps = ArrayList<Int>()
     private var timestampCounter = 0
+
+    // Undo
+    private val moves = ArrayDeque<Move>()
+    private lateinit var movesAdapter: MovesAdapter
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -89,6 +96,14 @@ class MatchActivity : AppCompatActivity() {
         }
 
 
+        // Moves
+        val movesRecyclerView: RecyclerView = findViewById(R.id.movesRecyclerView)
+        movesAdapter = MovesAdapter(emptyList())
+        movesRecyclerView.adapter = movesAdapter
+        val layoutManager = GridLayoutManager(this, 1)
+        movesRecyclerView.layoutManager = layoutManager
+
+
         // Buttons
         val endButton: Button = findViewById(R.id.endButton)
         endButton.setOnClickListener { stopRecording() }
@@ -98,7 +113,12 @@ class MatchActivity : AppCompatActivity() {
         val twoPointerButton: Button = findViewById(R.id.twoPointerButton)
         twoPointerButton.setOnClickListener { showPopupWindow(twoPointerButton, "two-pointer") }
         val threePointerButton: Button = findViewById(R.id.threePointerButton)
-        threePointerButton.setOnClickListener { showPopupWindow(threePointerButton, "three-pointer") }
+        threePointerButton.setOnClickListener {
+            showPopupWindow(
+                threePointerButton,
+                "three-pointer"
+            )
+        }
         val assistButton: Button = findViewById(R.id.assistButton)
         assistButton.setOnClickListener { made("assist") }
         val reboundButton: Button = findViewById(R.id.reboundButton)
@@ -109,14 +129,15 @@ class MatchActivity : AppCompatActivity() {
         blockButton.setOnClickListener { made("block") }
         val foulButton: Button = findViewById(R.id.foulButton)
         foulButton.setOnClickListener { made("foul") }
-
+        val undoButton: Button = findViewById(R.id.undoButton)
+        undoButton.setOnClickListener { undo() }
 
         // Create a match record in database
         initializeMatch(matchDescription.toString(), matchPlace.toString())
 
     }
 
-    fun displayStats() {
+    private fun displayStats() {
 
         val selectedPlayerIndex = playersList?.indexOf(selectedPlayer)
         if (selectedPlayerIndex != null && selectedPlayerIndex != -1) {
@@ -135,12 +156,13 @@ class MatchActivity : AppCompatActivity() {
 
             // Useful values
             val totalPoints = player.oneScored + player.twoScored * 2 + player.threeScored * 3
+            // For FG stat, one-pointers are not considered as they are not field goals :)
             val totalAttempted =
-                player.twoAttempted + player.threeAttempted // For FG stat, one-pointers
+                player.twoAttempted + player.threeAttempted
             val totalMade =
-                player.twoScored + player.threeScored            // are not considered as they
+                player.twoScored + player.threeScored
             val totalMissed =
-                totalAttempted - totalMade                     // are not field goals :)
+                totalAttempted - totalMade
 
             //Sum of points
             pointsView.text = totalPoints.toString()
@@ -218,15 +240,22 @@ class MatchActivity : AppCompatActivity() {
 
             //Fouls
             foulsView.text = player.fouls.toString()
+
+
+            updateMoves(moves.toList())
         }
 
+    }
+
+    private fun updateMoves(moves: List<Move>) {
+        movesAdapter.moves = moves
+        movesAdapter.notifyDataSetChanged()
     }
 
     private fun initializeMatch(matchDescription: String, matchPlace: String) {
         val dbHandler = DBHandler(this, null, null, 1)
 
         val date = UtilityClass.now().split("_")[0]
-        println("$matchDescription, $matchPlace, $date")
         match = Match(matchDescription, matchPlace, date)
         matchId = dbHandler.addMatch(match!!).toInt()
 
@@ -260,6 +289,63 @@ class MatchActivity : AppCompatActivity() {
         popupWindow.showAsDropDown(button)
     }
 
+    private fun undo() {
+        if (moves.isNotEmpty()) {
+            val lastMove = moves.pop()
+            val selectedPlayerIndex = playersList?.indexOf(lastMove.player)
+            if (selectedPlayerIndex != null && selectedPlayerIndex != -1) {
+                val player = playersList!![selectedPlayerIndex]
+                when (lastMove.event) {
+                    "one-pointer" -> {
+                        player.oneAttempted -= 1
+                        if (lastMove.result) player.oneScored -= 1
+                    }
+
+                    "two-pointer" -> {
+                        player.twoAttempted -= 1
+                        if (lastMove.result) player.twoScored -= 1
+                    }
+
+                    "three-pointer" -> {
+                        player.threeAttempted -= 1
+                        if (lastMove.result) player.threeScored -= 1
+                    }
+
+                    "assist" -> {
+                        player.assists -= 1
+                    }
+
+                    "rebound" -> {
+                        player.rebounds -= 1
+                    }
+
+                    "steal" -> {
+                        player.steals -= 1
+                    }
+
+                    "block" -> {
+                        player.blocks -= 1
+                    }
+
+                    "foul" -> {
+                        player.fouls -= 1
+                    }
+                }
+            }
+            val dbHandler = DBHandler(this, null, null, 1)
+            if (match != null) {
+                val id = dbHandler.findEventId(
+                    matchId,
+                    lastMove.event,
+                    "${selectedPlayer!!.firstName} ${selectedPlayer!!.lastName} (${selectedPlayer!!.number})",
+                    lastMove.videoName
+                )
+                dbHandler.deleteEvent(id)
+            }
+            displayStats()
+        }
+    }
+
     private fun made(eventType: String) {
         val selectedPlayerIndex = playersList?.indexOf(selectedPlayer)
         if (selectedPlayerIndex != null && selectedPlayerIndex != -1) {
@@ -268,32 +354,61 @@ class MatchActivity : AppCompatActivity() {
                     playersList?.get(selectedPlayerIndex)!!.oneAttempted += 1
                     playersList?.get(selectedPlayerIndex)!!.oneScored += 1
                 }
+
                 "two-pointer" -> {
                     playersList?.get(selectedPlayerIndex)!!.twoAttempted += 1
                     playersList?.get(selectedPlayerIndex)!!.twoScored += 1
                 }
+
                 "three-pointer" -> {
                     playersList?.get(selectedPlayerIndex)!!.threeAttempted += 1
                     playersList?.get(selectedPlayerIndex)!!.threeScored += 1
                 }
+
                 "assist" -> {
                     playersList?.get(selectedPlayerIndex)!!.assists += 1
                 }
+
                 "rebound" -> {
                     playersList?.get(selectedPlayerIndex)!!.rebounds += 1
                 }
+
                 "steal" -> {
                     playersList?.get(selectedPlayerIndex)!!.steals += 1
                 }
+
                 "block" -> {
                     playersList?.get(selectedPlayerIndex)!!.blocks += 1
                 }
+
                 "foul" -> {
                     playersList?.get(selectedPlayerIndex)!!.fouls += 1
                 }
             }
         }
-        eventOccured(eventType)
+
+        var videoName = "no_video"
+        var timestamp = -1
+        if (eventType in chosenTypes) {
+            videoName = "trimmed${matchId}_$timestampCounter.mp4"
+            timestamp = reportHighlight()
+            timestampCounter += 1
+        }
+
+        val move = Move(playersList!![selectedPlayerIndex!!], eventType, true, videoName, timestamp)
+        moves.push(move)
+
+        val dbHandler = DBHandler(this, null, null, 1)
+        if (match != null) {
+            val event = Event(
+                matchId,
+                eventType,
+                "${playersList!![selectedPlayerIndex].firstName} ${playersList!![selectedPlayerIndex].lastName} (${playersList!![selectedPlayerIndex].number})",
+                videoName
+            )
+            dbHandler.addEvent(event)
+        }
+
         displayStats()
     }
 
@@ -304,50 +419,46 @@ class MatchActivity : AppCompatActivity() {
                 "one-pointer" -> {
                     playersList?.get(selectedPlayerIndex)!!.oneAttempted += 1
                 }
+
                 "two-pointer" -> {
                     playersList?.get(selectedPlayerIndex)!!.twoAttempted += 1
                 }
+
                 "three-pointer" -> {
                     playersList?.get(selectedPlayerIndex)!!.threeAttempted += 1
                 }
             }
         }
-        displayStats()
-    }
 
-    private fun eventOccured(eventType: String) {
-        // Handle the highlights
-        var videoName = "no_video"
-        if (eventType in chosenTypes) {
-            reportHighlight()
-            videoName = "trimmed${matchId}_$timestampCounter.mp4"
-        }
-
+        val videoName = "no_video"
+        val move = Move(playersList!![selectedPlayerIndex!!], eventType, false, videoName, -1)
+        moves.push(move)
 
         val dbHandler = DBHandler(this, null, null, 1)
-        timestampCounter += 1
         if (match != null) {
             val event = Event(
                 matchId,
                 eventType,
-                "${selectedPlayer!!.firstName} ${selectedPlayer!!.lastName} (${selectedPlayer!!.number})",
+                "${playersList!![selectedPlayerIndex].firstName} ${playersList!![selectedPlayerIndex].lastName} (${playersList!![selectedPlayerIndex].number})",
                 videoName
             )
             dbHandler.addEvent(event)
         }
+
+        displayStats()
     }
 
-    private fun reportHighlight() {
+    private fun reportHighlight(): Int {
         val now = UtilityClass.now()
         val cam = UtilityClass.readTimestamp(this, "camera_start.txt")
         if (cam != null) {
             val diff = UtilityClass.differenceInSeconds(now, cam)
             if (diff >= highlightLength) {
-                timestamps.add(diff.toInt())
-            } else {
-                timestamps.add(highlightLength)
+                return diff.toInt()
             }
-        }
+            return highlightLength
+        } else println("No cam file found")
+        return -1
     }
 
     private fun runTimer(timeView: TextView) {
@@ -388,21 +499,26 @@ class MatchActivity : AppCompatActivity() {
         if (isRecording) {
             destroyRecorder()
             isRecording = false
-            timestampCounter = 0
             createHighlights()
         }
     }
 
     private fun createHighlights() {
         val videoEditor = VideoEditor("JamCam", "original.mp4")
-        for (startTime in timestamps) {
-            val stop = UtilityClass.secondsToTimestamp(startTime)
-            val start = UtilityClass.substractTime(stop, highlightLength)
-            val outputName = "trimmed${matchId}_$timestampCounter.mp4"
-            timestampCounter += 1
-            videoEditor.createHighlight(this, start, stop, outputName)
+        for (move in moves) {
+            if (move.videoName != "no_video") {
+                val stop = UtilityClass.secondsToTimestamp(move.timestamp)
+                val start = UtilityClass.substractTime(stop, highlightLength)
+                videoEditor.createHighlight(this, start, stop, move.videoName)
+            }
+
+            // Wait for 1 seconds between highlights trimming
+            val handler = Handler()
+            handler.postDelayed({
+            }, 1000)
         }
         finish()
     }
+
 
 }
