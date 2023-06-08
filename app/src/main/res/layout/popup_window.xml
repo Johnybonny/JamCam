@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="100dp"
+    android:orientation="horizontal"
+    android:background="@drawable/popup_background">
+
+    <Button
+        android:id="@+id/missButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:text="Missed" />
+
+    <Button
+        android:id="@+id/scoreButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:text="Scored" />
+
+</LinearLayout>
+

@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.videorecorder
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -17,6 +17,8 @@ import android.view.Gravity
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.WindowManager
+import com.example.jamcam.R
+import com.example.jamcam.UtilityClass
 
 class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
 

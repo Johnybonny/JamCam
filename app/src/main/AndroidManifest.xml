@@ -49,7 +49,7 @@
                 android:value="" />
         </activity>
 
-        <service android:name=".BackgroundVideoRecorder" />
+        <service android:name=".videorecorder.BackgroundVideoRecorder" />
     </application>
 
 </manifest>
