@@ -4,7 +4,7 @@
     <string name="new_match">new match</string>
     <string name="replays">replays</string>
 
-<!--    Pregame activity-->
+    <!--    Pregame activity-->
     <string name="pregame_title">Pre-match preparation</string>
     <string name="pregame_subtitle">Adjust settings before starting the match</string>
     <string name="match_description">What match are you watching?</string>
