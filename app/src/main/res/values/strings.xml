@@ -4,7 +4,7 @@
     <string name="new_match">new match</string>
     <string name="replays">replays</string>
 
-    <!--    Pregame activity-->
+    <!--Pregame activity-->
     <string name="pregame_title">Pre-match preparation</string>
     <string name="pregame_subtitle">Adjust settings before starting the match</string>
     <string name="match_description">What match are you watching?</string>
@@ -14,7 +14,25 @@
     <string name="last_name">Last Name</string>
     <string name="number">Number</string>
     <string name="add_player">Add player</string>
-    <string name="remove">X</string>
     <string name="add_players">Add some players</string>
+    <string name="match_length">Match length</string>
+
+    <!--Match Activity-->
+    <string name="last_plays">Last plays</string>
+    <string name="one_pointer">+1</string>
+    <string name="two_pointer">+2</string>
+    <string name="three_pointer">+3</string>
+    <string name="assist">Assist</string>
+    <string name="rebound">Rebound</string>
+    <string name="steal">Steal</string>
+    <string name="block">Block</string>
+    <string name="foul">Foul</string>
+    <string name="end_match">End \nMatch</string>
+    <string name="undo">Undo</string>
+    <string name="question_scored">Did the player score?</string>
+    <string name="scored">Yes</string>
+    <string name="missed">No</string>
+
+
 
 </resources>

@@ -37,6 +37,7 @@
         android:layout_height="24dp"
         android:paddingStart="6dp"
         android:background="@drawable/transparent"
-        android:drawableLeft="@drawable/close_vec" />
+        android:drawableStart="@drawable/close_vec"
+        android:drawableTint="@color/color3"/>
 
 </LinearLayout>

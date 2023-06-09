@@ -1,25 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="220dp"
-    android:layout_height="100dp"
-    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:orientation="vertical"
     android:background="@drawable/popup_background">
 
-    <Button
-        android:id="@+id/missButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:text="Missed" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_margin="10dp"
+        android:text="@string/question_scored"
+        android:textSize="24sp"
+        android:textColor="@color/color4"/>
 
-    <Button
-        android:id="@+id/scoreButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:text="Scored" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="3">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/missButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="@color/color7"
+            android:drawableStart="@drawable/no_vec"
+            android:drawableTint="@color/color4"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/scoreButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="@color/color6"
+            android:drawableStart="@drawable/yes_vec"
+            android:drawableTint="@color/color4"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
 
