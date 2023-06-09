@@ -3,6 +3,7 @@ package com.example.jamcam.videorecorder
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
+import com.example.jamcam.UtilityClass
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler
@@ -24,6 +25,8 @@ class VideoEditor(private val directoryName: String, private val fileName: Strin
                     Log.d("FFmpeg", "onSuccess")
                     val dirPath: String = context.filesDir.path
                     val input = "${dirPath}/$fileName"
+                    // create output folder if does not exist
+                    UtilityClass.createFolderIfNotExists("${dirPath}/replays/")
                     val output = "${dirPath}/replays/$outputName"
                     val command = arrayOf("-y", "-i", input, "-ss", start, "-to", stop, "-c", "copy", output)
                     try {

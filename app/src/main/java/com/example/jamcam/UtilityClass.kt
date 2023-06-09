@@ -98,6 +98,21 @@ class UtilityClass {
         }
 
         @JvmStatic
+        fun createFolderIfNotExists(path: String) {
+            val folder = File(path)
+            if (!folder.exists()) {
+                val created = folder.mkdir()
+                if (created) {
+                    println("Folder created successfully.")
+                } else {
+                    println("Failed to create the folder.")
+                }
+            } else {
+                println("Folder already exists.")
+            }
+        }
+
+        @JvmStatic
         fun substractTime(initialTime: String, secondsToSubstract: Int): String {
             val parts = initialTime.split(":")
             val minutes = parts[0].toInt()
