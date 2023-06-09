@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PregameFormFragment"
+    android:orientation="vertical">
+
+
+
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:background="@drawable/custom_edit"
+        android:hint="@string/match_description"
+        android:drawableStart="@drawable/basketball_vec"
+        android:drawablePadding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"/>
+
+    <EditText
+        android:id="@+id/placeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:background="@drawable/custom_edit"
+        android:hint="@string/match_place"
+        android:drawableStart="@drawable/location_vec"
+        android:drawablePadding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/moveRightButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:text="@string/add_players"
+        android:backgroundTint="@color/grey"
+        android:backgroundTintMode="add"
+        android:background="@drawable/custom_button"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"/>
+
+</LinearLayout>

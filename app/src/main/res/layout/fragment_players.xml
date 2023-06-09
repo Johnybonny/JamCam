@@ -2,38 +2,82 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/custom_edit"
+    android:padding="10dp">
 
-    <!-- Input fields for adding a new player -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/add_players"
+        android:padding="5dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="32sp"
+        android:autoSizeStepGranularity="2sp"
+        android:textStyle="bold"
+        android:textColor="@color/color2"/>
+
     <EditText
         android:id="@+id/editText_first_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="First Name" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/first_name"
+        android:background="@drawable/custom_edit"
+        android:layout_margin="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"/>
 
     <EditText
         android:id="@+id/editText_last_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Last Name" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/last_name"
+        android:background="@drawable/custom_edit"
+        android:layout_margin="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
 
     <EditText
         android:id="@+id/editText_number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Number" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/number"
+        android:background="@drawable/custom_edit"
+        android:layout_margin="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_add_player"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Player" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/custom_button"
+        android:backgroundTint="@color/grey"
+        android:backgroundTintMode="add"
+        android:text="@string/add_player"
+        android:layout_margin="5dp"/>
 
-    <!-- Player list -->
     <ListView
         android:id="@+id/listView_players"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="2"
+        android:divider="@color/color1"
+        android:dividerHeight="2dp"
+        android:background="@drawable/custom_edit"
+        android:layout_margin="5dp"
+        android:padding="10dp"/>
 
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -285,8 +286,11 @@ class MatchActivity : AppCompatActivity() {
             made(eventType)
         }
 
-        // Show the popup window anchored to the button
-        popupWindow.showAsDropDown(button)
+//        popupWindow.showAsDropDown(button)
+        val parentView = findViewById<View>(android.R.id.content)
+        val gravity = Gravity.CENTER
+
+        popupWindow.showAtLocation(parentView, gravity, 0, 0)
     }
 
     private fun undo() {
@@ -466,10 +470,9 @@ class MatchActivity : AppCompatActivity() {
 
         handler.post(object : Runnable {
             override fun run() {
-                val hours: Int = seconds / 3600
                 val minutes: Int = (seconds % 3600) / 60
                 val secs: Int = seconds % 60
-                val time: String = String.format("%d:%02d:%02d", hours, minutes, secs)
+                val time: String = String.format("%02d:%02d", minutes, secs)
                 timeView.text = time
                 seconds++
                 handler.postDelayed(this, 1000)
