@@ -23,12 +23,17 @@ class MovesAdapter(var moves: List<Move>) : RecyclerView.Adapter<MovesAdapter.Mo
         val moveTextView = holder.moveLinearLayout.findViewById<TextView>(R.id.moveTextView)
 
         var moveText = ""
-        moveText = if (move.result) "${move.event} by ${move.player.firstName} ${move.player.lastName} (${move.player.number})"
+        moveText = if (move.result) "${move.event} by ${move.player.lastName} (${move.player.number})"
         else "Missed ${move.event} by ${move.player.firstName} ${move.player.lastName} (${move.player.number})"
         moveTextView.text= moveText
+
     }
+
+
 
     override fun getItemCount(): Int {
         return moves.size
     }
+
+
 }

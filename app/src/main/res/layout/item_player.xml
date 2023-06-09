@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/textView_first_name"
@@ -25,11 +25,19 @@
         android:layout_marginStart="8dp"
         android:textSize="16sp" />
 
-    <Button
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_remove_player"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Remove" />
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:paddingStart="6dp"
+        android:background="@drawable/transparent"
+        android:drawableStart="@drawable/close_vec"
+        android:drawableTint="@color/color3"/>
 
 </LinearLayout>
