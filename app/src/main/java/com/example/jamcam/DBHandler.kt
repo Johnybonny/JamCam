@@ -93,6 +93,85 @@ class DBHandler(
         return id
     }
 
+    fun getMatch(matchId: Int): Match {
+        val query =
+            "SELECT _id, description, place, date FROM matches where _id = $matchId"
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+
+        var match = Match(
+            "",
+            "",
+            ""
+        )
+        if (cursor.moveToFirst()) {
+            match = Match(
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3)
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return match
+
+    }
+
+    fun getEvent(eventId: Int): Event {
+        val query =
+            "SELECT _id, matchid, eventtype, player, video FROM events where _id = $eventId"
+
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+
+        var event = Event(
+            -1,
+            "",
+            "",
+            ""
+        )
+        if (cursor.moveToFirst()) {
+            event = Event(
+                cursor.getInt(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4)
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return event
+    }
+
+    fun getEvent(videoName: String) : Event {
+        val query =
+            "SELECT _id, matchid, eventtype, player, video FROM events where video LIKE \"$videoName\""
+
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+
+        var event = Event(
+            -1,
+            "",
+            "",
+            ""
+        )
+        if (cursor.moveToFirst()) {
+            event = Event(
+                cursor.getInt(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4)
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return event
+    }
+
     fun deleteEvent(id: Int) {
         val db = this.writableDatabase
         val whereClause = "$COLUMN_ID_AUTO=?"
@@ -101,7 +180,7 @@ class DBHandler(
         db.close()
     }
 
-    fun getAllEvents():MutableList<Event> {
+    fun getAllEvents(): MutableList<Event> {
         val query = "SELECT * FROM $TABLE_EVENTS"
         val db = this.writableDatabase
         val cursor = db.rawQuery(query, null)
