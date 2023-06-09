@@ -26,9 +26,24 @@ class ReplaysActivity : AppCompatActivity() {
         if (replayDirectory.exists() && replayDirectory.isDirectory) {
             replayDirectory.listFiles()?.let { files ->
                 for (file in files) {
+
+                    val videoName = file.name
+                    val regex = Regex("""\d+(?=\D)""")
+                    val numbers = regex.findAll(videoName)
+                        .map { it.value.toInt() }
+                        .toList()
+                    val matchId = numbers[0]
+
+                    val dbHandler = DBHandler(this, null, null, 1)
+                    val match = dbHandler.getMatch(matchId)
+                    val event = dbHandler.getEvent(videoName)
+
+                    val videoTitle = match.description.capitalize()
+                    val videoDescription = "${event.eventType.capitalize()} by ${event.player}"
+
                     val video = Video(
-                        file.name,
-                        "Short description",
+                        videoTitle,
+                        videoDescription,
                         file.absolutePath,
                     )
                     videos.add(video)
@@ -55,6 +70,7 @@ class ReplaysActivity : AppCompatActivity() {
                 val newIndex = exoPlayerItems.indexOfFirst { it.position == position }
                 if (newIndex != -1) {
                     val player = exoPlayerItems[newIndex].exoPlayer
+                    player.seekTo(0)
                     player.playWhenReady = true
                     player.play()
                 }

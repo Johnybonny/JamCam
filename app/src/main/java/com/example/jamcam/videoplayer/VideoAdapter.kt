@@ -52,7 +52,7 @@ class VideoAdapter(
             binding.playerView.player = exoPlayer
 
             exoPlayer.seekTo(0)
-            exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+            exoPlayer.repeatMode = Player.REPEAT_MODE_OFF
 
             val dataSourceFactory = DefaultDataSource.Factory(context)
 

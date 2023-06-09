@@ -24,7 +24,7 @@ class VideoEditor(private val directoryName: String, private val fileName: Strin
                     Log.d("FFmpeg", "onSuccess")
                     val dirPath: String = context.filesDir.path
                     val input = "${dirPath}/$fileName"
-                    val output = "${dirPath}/$outputName"
+                    val output = "${dirPath}/replays/$outputName"
                     val command = arrayOf("-y", "-i", input, "-ss", start, "-to", stop, "-c", "copy", output)
                     try {
                         ffmpeg.execute(command, object : ExecuteBinaryResponseHandler() {
