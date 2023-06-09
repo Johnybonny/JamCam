@@ -4,37 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color1"
     android:gravity="center"
     android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".PregameActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="32dp"
-        android:text="Pregame preparation"/>
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/custom_title"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pregame_title"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pregame_subtitle"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/descriptionEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Match descrpition" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:background="@drawable/custom_edit"
+        android:hint="@string/match_description"
+        android:drawableStart="@drawable/basketball_vec"
+        android:drawablePadding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"/>
 
     <EditText
         android:id="@+id/placeEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Match place" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:background="@drawable/custom_edit"
+        android:hint="@string/match_place"
+        android:drawableStart="@drawable/location_vec"
+        android:drawablePadding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/startMatchButton"
-        android:text="Start match"/>
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="6" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/startMatchButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:text="@string/start_match"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:background="@drawable/custom_button"/>
 
 </LinearLayout>

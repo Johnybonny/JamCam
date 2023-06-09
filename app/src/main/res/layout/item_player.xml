@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/textView_first_name"
@@ -25,11 +25,13 @@
         android:layout_marginStart="8dp"
         android:textSize="16sp" />
 
+
     <Button
         android:id="@+id/button_remove_player"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Remove" />
+        android:text="@string/remove" />
 
 </LinearLayout>
