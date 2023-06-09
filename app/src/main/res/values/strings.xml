@@ -32,7 +32,7 @@
     <string name="question_scored">Did the player score?</string>
     <string name="scored">Yes</string>
     <string name="missed">No</string>
-
+    <string name="share_video">Share replay!</string>
 
 
 </resources>
