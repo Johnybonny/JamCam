@@ -1,7 +1,19 @@
 package com.example.jamcam
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import androidx.core.app.ShareCompat
+import androidx.core.content.FileProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.jamcam.databinding.ActivityReplaysBinding
 import com.example.jamcam.videoplayer.ExoPlayerItem
@@ -18,6 +30,44 @@ class ReplaysActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReplaysBinding.inflate(layoutInflater)
+
+        binding.fab.setOnClickListener {
+            finish()
+        }
+
+        binding.fab2.setOnClickListener {
+            val nowPlayingIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
+            if (nowPlayingIndex != -1) {
+                val video = videos[nowPlayingIndex]
+
+                val requestFile = File(video.url)
+                val fileUri: Uri? = try {
+                    FileProvider.getUriForFile(
+                        this@ReplaysActivity,
+                        "com.example.jamcam.fileprovider",
+                        requestFile
+                    )
+                } catch (e: IllegalArgumentException) {
+                    Log.e(
+                        "File Selector",
+                        "The selected file can't be shared: $requestFile"
+                    )
+                    null
+                }
+
+                startActivity(
+                    Intent.createChooser(
+                        Intent().setAction(Intent.ACTION_SEND)
+                            .setType("video/*")
+                            .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            .putExtra(
+                                Intent.EXTRA_STREAM,
+                                fileUri
+                            ), resources.getString(R.string.share_video)
+                    )
+                )
+            }
+        }
         setContentView(binding.root)
 
         val path = "${applicationContext.filesDir.path}/replays"
