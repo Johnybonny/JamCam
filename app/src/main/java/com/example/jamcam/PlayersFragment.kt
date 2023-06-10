@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import java.io.Serializable
 
@@ -74,6 +75,8 @@ class PlayersFragment : Fragment() {
             firstNameEditText.text.clear()
             lastNameEditText.text.clear()
             numberEditText.text.clear()
+        } else {
+            Toast.makeText(requireContext(), "Player data is not full", Toast.LENGTH_LONG).show()
         }
     }
 
