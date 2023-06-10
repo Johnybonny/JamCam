@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.jamcam.databinding.ActivityReplaysBinding
@@ -65,32 +66,38 @@ class ReplaysActivity : AppCompatActivity() {
                 }
             }
         }
-
-        adapter = VideoAdapter(this, videos, object : VideoAdapter.OnVideoPreparedListener {
-            override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
-                exoPlayerItems.add(exoPlayerItem)
-            }
-        })
-
-        binding.viewPager2.adapter = adapter
-
-        binding.viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.playWhenReady }
-                if (previousIndex != -1) {
-                    val player = exoPlayerItems[previousIndex].exoPlayer
-                    player.pause()
-                    player.playWhenReady = false
+        // if there are no videos - finish activity
+        if (videos.size > 0) {
+            adapter = VideoAdapter(this, videos, object : VideoAdapter.OnVideoPreparedListener {
+                override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
+                    exoPlayerItems.add(exoPlayerItem)
                 }
-                val newIndex = exoPlayerItems.indexOfFirst { it.position == position }
-                if (newIndex != -1) {
-                    val player = exoPlayerItems[newIndex].exoPlayer
-                    player.seekTo(0)
-                    player.playWhenReady = true
-                    player.play()
+            })
+
+            binding.viewPager2.adapter = adapter
+
+            binding.viewPager2.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.playWhenReady }
+                    if (previousIndex != -1) {
+                        val player = exoPlayerItems[previousIndex].exoPlayer
+                        player.pause()
+                        player.playWhenReady = false
+                    }
+                    val newIndex = exoPlayerItems.indexOfFirst { it.position == position }
+                    if (newIndex != -1) {
+                        val player = exoPlayerItems[newIndex].exoPlayer
+                        player.seekTo(0)
+                        player.playWhenReady = true
+                        player.play()
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            Toast.makeText(this, "No replays to play!", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 
     override fun onPause() {
