@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.jamcam.databinding.ActivityReplaysBinding
@@ -34,7 +35,7 @@ class ReplaysActivity : AppCompatActivity() {
         }
 
         binding.fabDelete.setOnClickListener {
-            deleteCurrentVideo()
+            modalDelete()
         }
 
         val path = "${applicationContext.filesDir.path}/replays"
@@ -223,25 +224,24 @@ class ReplaysActivity : AppCompatActivity() {
         }
     }
 
-    private fun printVideos() {
-        println("----------- VIDEOS -------------")
-        for (video: Video in videos) {
-            println(video.title + " " + video.description + " " + video.url)
-        }
-        println("---")
-    }
-
-    private fun printExoPlayers() {
-        println("----------- EXOPLAYERS -------------")
-        for (exoplayer: ExoPlayerItem in exoPlayerItems) {
-            println(exoplayer.position.toString() + " " + exoplayer.exoPlayer.playWhenReady.toString())
-        }
-        println("---")
-    }
-
     private fun updateExoPlayerItems(indexOfDeleted: Int) {
         for (i in indexOfDeleted until exoPlayerItems.size) {
             exoPlayerItems[i].position = i
+        }
+    }
+
+    private fun modalDelete() {
+        val builder = AlertDialog.Builder(this)
+
+        with(builder) {
+            setTitle("Are you sure?")
+            setPositiveButton("Delete this file") { _, _ ->
+                deleteCurrentVideo()
+            }
+            setNegativeButton("Cancel") { _, _ ->
+
+            }
+            show()
         }
     }
 }
