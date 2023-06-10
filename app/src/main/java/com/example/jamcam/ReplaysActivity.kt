@@ -41,29 +41,27 @@ class ReplaysActivity : AppCompatActivity() {
 
         val replayDirectory = File(path)
         if (replayDirectory.exists() && replayDirectory.isDirectory) {
-            replayDirectory.listFiles()?.let { files ->
-                for (file in files) {
+            val dbHandler = DBHandler(this, null, null, 1)
+            val events = dbHandler.getEvents("no_video")
+            for(event: Event in events) {
+                println(event.video)
+                val videoName = event.video
 
-                    val videoName = file.name
-                    val regex = Regex("""\d+(?=\D)""")
-                    val numbers = regex.findAll(videoName)
-                        .map { it.value.toInt() }
-                        .toList()
-                    val matchId = numbers[0]
+                val regex = Regex("""\d+(?=\D)""")
+                val numbers = regex.findAll(videoName)
+                    .map { it.value.toInt() }
+                    .toList()
+                val matchId = numbers[0]
+                val match = dbHandler.getMatch(matchId)
 
-                    val dbHandler = DBHandler(this, null, null, 1)
-                    val match = dbHandler.getMatch(matchId)
-                    val event = dbHandler.getEvent(videoName)
-
-                    val videoTitle = match.description.capitalize()
-                    val videoDescription = "${event.eventType.capitalize()} by ${event.player}"
-                    val video = Video(
-                        videoTitle,
-                        videoDescription,
-                        file.absolutePath,
-                    )
-                    videos.add(video)
-                }
+                val videoTitle = match.description.capitalize()
+                val videoDescription = "${event.eventType.capitalize()} by ${event.player}"
+                val video = Video(
+                    videoTitle,
+                    videoDescription,
+                    "$path/$videoName",
+                )
+                videos.add(video)
             }
         }
         // if there are no videos - finish activity
