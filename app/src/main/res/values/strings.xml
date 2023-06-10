@@ -33,6 +33,7 @@
     <string name="scored">Yes</string>
     <string name="missed">No</string>
     <string name="share_video">Share replay!</string>
+    <string name="loading">Processing the videos...</string>
 
 
 </resources>

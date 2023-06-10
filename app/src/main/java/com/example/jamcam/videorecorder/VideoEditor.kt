@@ -9,8 +9,9 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException
+import java.io.File
 
-class VideoEditor(private val directoryName: String, private val fileName: String) {
+class VideoEditor(private val fileName: String) {
 
 
     fun createHighlight(context: Context, start: String, stop: String, outputName: String) {
@@ -71,6 +72,13 @@ class VideoEditor(private val directoryName: String, private val fileName: Strin
         } catch (e: FFmpegNotSupportedException) {
             Log.e("FFmpeg", "Your device does not support FFmpeg")
         }
+    }
+
+    fun deleteOriginal(context: Context) {
+        val dirPath: String = context.filesDir.path
+        val input = "${dirPath}/$fileName"
+        val inputFile = File(input)
+        if (inputFile.exists()) inputFile.delete()
     }
 
 

@@ -539,15 +539,20 @@ class MatchActivity : AppCompatActivity() {
         popupAnimation!!.showAtLocation(parentView, gravity, 0, 0)
     }
 
-    fun checkFinish() {
+    private fun checkFinish(videoEditor: VideoEditor) {
         highlightsCompleted += 1
-        if (highlightsCompleted == highlightsCount) finish();
+        if (highlightsCompleted == highlightsCount) {
+            val handler = Handler()
+            handler.postDelayed({
+                videoEditor.deleteOriginal(this)
+                finish()
+            }, 1000)
+        }
     }
 
     private fun createHighlights() {
-        val videoEditor = VideoEditor("JamCam", "original.mp4")
+        val videoEditor = VideoEditor("original.mp4")
         showPopupLoading()
-
 
         val movesList = moves.toList()
 
@@ -559,18 +564,18 @@ class MatchActivity : AppCompatActivity() {
         }
 
         for (i in movesList.indices) {
-            val handler = Handler()
-            handler.postDelayed({
-                val move = movesList[i]
-                if (move.videoName != "no_video") {
+            val move = movesList[i]
+            if (move.videoName != "no_video") {
+                val handler = Handler()
+                handler.postDelayed({
                     val stop = UtilityClass.secondsToTimestamp(move.timestamp)
                     val start = UtilityClass.substractTime(stop, highlightLength)
                     videoEditor.createHighlight(this, start, stop, move.videoName)
-                    checkFinish()
-                }
-            }, 1000 * i.toLong())
+                    checkFinish(videoEditor)
+                }, 1000 * i.toLong())
+            }
+
         }
-//        finish()
     }
 
 
