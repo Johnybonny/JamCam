@@ -2,8 +2,10 @@ package com.example.jamcam
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 
 class DBHandler(
@@ -170,6 +172,20 @@ class DBHandler(
         cursor.close()
         db.close()
         return event
+    }
+
+    fun resetEventVideo(eventVideo: String) {
+        val query =
+            "UPDATE events SET video = 'no video' WHERE video LIKE \"$eventVideo\""
+        val db = this.writableDatabase
+        try {
+            db.execSQL(query)
+        } catch (e: SQLException) {
+            // Handle any potential SQL exception
+            Log.e("Database", "Error executing query: $query")
+        } finally {
+            db.close()
+        }
     }
 
     fun deleteEvent(id: Int) {

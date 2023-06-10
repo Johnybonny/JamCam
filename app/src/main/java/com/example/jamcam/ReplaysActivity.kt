@@ -167,7 +167,6 @@ class ReplaysActivity : AppCompatActivity() {
 
     private fun deleteCurrentVideo() {
         val nowPlayingIndex = binding.viewPager2.currentItem
-        println("nowPlayingIndex: $nowPlayingIndex")
 
         // pause the video
         var player = exoPlayerItems[nowPlayingIndex].exoPlayer
@@ -183,13 +182,14 @@ class ReplaysActivity : AppCompatActivity() {
             // play next video, video[nowPlayingIndex] will be deleted
             nowPlayingIndex
         }
-        println(nextPlayingIndex)
 
         if (nextPlayingIndex == -1) {
             // if this is the last video, delete it and exit activity
             // delete file
             val fileToDelete = File(video.url)
             fileToDelete.delete()
+            val dbHandler = DBHandler(this, null, null, 1)
+            dbHandler.resetEventVideo(fileToDelete.name)
             // exit
             finish()
         } else {
@@ -218,6 +218,10 @@ class ReplaysActivity : AppCompatActivity() {
             // delete file
             val fileToDelete = File(video.url)
             fileToDelete.delete()
+
+            // update database
+            val dbHandler = DBHandler(this, null, null, 1)
+            dbHandler.resetEventVideo(fileToDelete.name)
         }
     }
 
