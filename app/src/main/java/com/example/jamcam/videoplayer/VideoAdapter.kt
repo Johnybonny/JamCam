@@ -56,7 +56,8 @@ class VideoAdapter(
 
             val dataSourceFactory = DefaultDataSource.Factory(context)
 
-            mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(url)))
+            mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
 
             exoPlayer.setMediaSource(mediaSource)
             exoPlayer.prepare()
@@ -65,7 +66,6 @@ class VideoAdapter(
                 exoPlayer.playWhenReady = true
                 exoPlayer.play()
             }
-
             videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
         }
     }
@@ -76,15 +76,20 @@ class VideoAdapter(
     }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        val model = videos[position]
-
-        holder.binding.tvTitle.text = model.title
-        holder.binding.tvDescription.text = model.description
-        holder.setVideoPath(model.url)
+        val model = videos.getOrNull(position)
+        if (model != null) {
+            holder.binding.tvTitle.text = model.title
+            holder.binding.tvDescription.text = model.description
+            holder.setVideoPath(model.url)
+        }
     }
 
     override fun getItemCount(): Int {
         return videos.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return videos[position].hashCode().toLong()
     }
 
     interface OnVideoPreparedListener {

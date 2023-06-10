@@ -1,18 +1,10 @@
 package com.example.jamcam
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.jamcam.databinding.ActivityReplaysBinding
@@ -30,45 +22,19 @@ class ReplaysActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReplaysBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        binding.fab.setOnClickListener {
+        binding.fabBack.setOnClickListener {
             finish()
         }
 
-        binding.fab2.setOnClickListener {
-            val nowPlayingIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
-            if (nowPlayingIndex != -1) {
-                val video = videos[nowPlayingIndex]
-
-                val requestFile = File(video.url)
-                val fileUri: Uri? = try {
-                    FileProvider.getUriForFile(
-                        this@ReplaysActivity,
-                        "com.example.jamcam.fileprovider",
-                        requestFile
-                    )
-                } catch (e: IllegalArgumentException) {
-                    Log.e(
-                        "File Selector",
-                        "The selected file can't be shared: $requestFile"
-                    )
-                    null
-                }
-
-                startActivity(
-                    Intent.createChooser(
-                        Intent().setAction(Intent.ACTION_SEND)
-                            .setType("video/*")
-                            .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            .putExtra(
-                                Intent.EXTRA_STREAM,
-                                fileUri
-                            ), resources.getString(R.string.share_video)
-                    )
-                )
-            }
+        binding.fabShare.setOnClickListener {
+            shareCurrentVideo()
         }
-        setContentView(binding.root)
+
+        binding.fabDelete.setOnClickListener {
+            deleteCurrentVideo()
+        }
 
         val path = "${applicationContext.filesDir.path}/replays"
 
@@ -90,7 +56,6 @@ class ReplaysActivity : AppCompatActivity() {
 
                     val videoTitle = match.description.capitalize()
                     val videoDescription = "${event.eventType.capitalize()} by ${event.player}"
-
                     val video = Video(
                         videoTitle,
                         videoDescription,
@@ -111,7 +76,7 @@ class ReplaysActivity : AppCompatActivity() {
 
         binding.viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
+                val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.playWhenReady }
                 if (previousIndex != -1) {
                     val player = exoPlayerItems[previousIndex].exoPlayer
                     player.pause()
@@ -158,6 +123,120 @@ class ReplaysActivity : AppCompatActivity() {
                 player.stop()
                 player.clearMediaItems()
             }
+        }
+    }
+
+    private fun shareCurrentVideo() {
+        val nowPlayingIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
+        if (nowPlayingIndex != -1) {
+            val video = videos[nowPlayingIndex]
+
+            val requestFile = File(video.url)
+            val fileUri: Uri? = try {
+                FileProvider.getUriForFile(
+                    this@ReplaysActivity,
+                    "com.example.jamcam.fileprovider",
+                    requestFile
+                )
+            } catch (e: IllegalArgumentException) {
+                Log.e(
+                    "File Selector",
+                    "The selected file can't be shared: $requestFile"
+                )
+                null
+            }
+
+            startActivity(
+                Intent.createChooser(
+                    Intent().setAction(Intent.ACTION_SEND)
+                        .setType("video/*")
+                        .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        .putExtra(
+                            Intent.EXTRA_STREAM,
+                            fileUri
+                        ), resources.getString(R.string.share_video)
+                )
+            )
+        }
+    }
+
+    private fun deleteCurrentVideo() {
+        val nowPlayingIndex = binding.viewPager2.currentItem
+        if (nowPlayingIndex != -1) {
+            println("nowPlayingIndex: $nowPlayingIndex")
+
+            // pause the video
+            var player = exoPlayerItems[nowPlayingIndex].exoPlayer
+            player.pause()
+            player.playWhenReady = false
+            val video = videos[nowPlayingIndex]
+
+            // figure out the next video to play
+            val nextPlayingIndex: Int = if (nowPlayingIndex == videos.size - 1) {
+                // last video, move to the previous one
+                nowPlayingIndex - 1
+            } else {
+                // play next video, video[nowPlayingIndex] will be deleted
+                nowPlayingIndex
+            }
+            println(nextPlayingIndex)
+
+            if (nextPlayingIndex == -1) {
+                // if this is the last video, delete it and exit activity
+                // delete file
+                val fileToDelete = File(video.url)
+                fileToDelete.delete()
+                // exit
+                finish()
+            } else {
+                // there is another video to play!
+                // delete data from videos and exoPlayerItems
+                videos.removeAt(nowPlayingIndex)
+                exoPlayerItems.removeAt(nowPlayingIndex)
+
+                // notify adapter about the change, move to the next video
+                binding.viewPager2.adapter?.notifyItemRemoved(nowPlayingIndex)
+                binding.viewPager2.setCurrentItem(nextPlayingIndex, true)
+
+                // update exoplayeritems positions
+                updateExoPlayerItems(nowPlayingIndex)
+
+                // play the next video if it is loaded into exoPlayerItems
+                // if it's not, it will be played automatically
+                val exists = exoPlayerItems.any { it.position == nextPlayingIndex }
+                if (exists) {
+                    player = exoPlayerItems[nextPlayingIndex].exoPlayer
+                    player.seekTo(0)
+                    player.playWhenReady = true
+                    player.play()
+                }
+
+                // delete file
+                val fileToDelete = File(video.url)
+                fileToDelete.delete()
+            }
+        }
+    }
+
+    private fun printVideos() {
+        println("----------- VIDEOS -------------")
+        for (video: Video in videos) {
+            println(video.title + " " + video.description + " " + video.url)
+        }
+        println("---")
+    }
+
+    private fun printExoPlayers() {
+        println("----------- EXOPLAYERS -------------")
+        for (exoplayer: ExoPlayerItem in exoPlayerItems) {
+            println(exoplayer.position.toString() + " " + exoplayer.exoPlayer.playWhenReady.toString())
+        }
+        println("---")
+    }
+
+    private fun updateExoPlayerItems(indexOfDeleted: Int) {
+        for (i in indexOfDeleted until exoPlayerItems.size) {
+            exoPlayerItems[i].position = i
         }
     }
 }

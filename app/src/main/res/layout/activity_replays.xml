@@ -20,7 +20,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
@@ -33,16 +33,31 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
+        android:id="@+id/fabShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:backgroundTint="@color/color3"
         android:clickable="true"
+        android:focusable="true"
         android:tint="@color/color5"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
-        app:layout_constraintEnd_toEndOf="@+id/fab"
-        app:layout_constraintStart_toStartOf="@+id/fab"
-        app:srcCompat="@android:drawable/ic_menu_share" />
+        app:layout_constraintBottom_toTopOf="@+id/fabDelete"
+        app:layout_constraintEnd_toEndOf="@+id/fabDelete"
+        app:layout_constraintStart_toStartOf="@+id/fabDelete"
+        app:srcCompat="@drawable/share_window" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:backgroundTint="@color/color7"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@color/color5"
+        app:layout_constraintBottom_toTopOf="@+id/fabBack"
+        app:layout_constraintEnd_toEndOf="@+id/fabBack"
+        app:layout_constraintStart_toStartOf="@+id/fabBack"
+        app:srcCompat="@drawable/trash_can" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
