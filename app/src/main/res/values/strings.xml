@@ -8,7 +8,7 @@
     <string name="pregame_title">Pre-match preparation</string>
     <string name="pregame_subtitle">Adjust settings before starting the match</string>
     <string name="match_description">What match are you watching?</string>
-    <string name="match_place">Where is it going to take place?</string>
+    <string name="match_place">Click to change place…</string>
     <string name="start_match">Start match</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -42,6 +42,9 @@
     <string name="select_length">Highlight length</string>
     <string name="select_type">Types of highlights to save</string>
     <string name="second">s</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="location_address">LOCATION ADDRESS</string>
 
 
 </resources>
