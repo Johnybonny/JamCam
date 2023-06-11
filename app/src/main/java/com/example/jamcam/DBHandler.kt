@@ -120,6 +120,26 @@ class DBHandler(
 
     }
 
+    fun getAllMatches(): MutableList<Match> {
+        val query = "SELECT * FROM $TABLE_MATCHES"
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        val list: MutableList<Match> = mutableListOf()
+        var match: Match? = null
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            val description = cursor.getString(1)
+            val place = cursor.getString(2)
+            val date = cursor.getString(3)
+            match = Match(description, place, date)
+            list.add(match)
+            cursor.moveToNext()
+        }
+        cursor.close()
+        db.close()
+        return list
+    }
+
     fun getEvent(eventId: Int): Event {
         val query =
             "SELECT _id, matchid, eventtype, player, video FROM events where _id = $eventId"

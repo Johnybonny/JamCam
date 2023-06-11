@@ -43,5 +43,11 @@
     <string name="select_type">Types of highlights to save</string>
     <string name="second">s</string>
 
+    <!---Manage Activity-->
+    <string name="manage_title">Manage Games</string>
+    <string name="all_matches">Here are all your games</string>
+    <string name="click_to_see">Click a match to see details</string>
+    <string name="back">Back</string>
+
 
 </resources>
