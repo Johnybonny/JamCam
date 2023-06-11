@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,9 +30,8 @@ class MatchActivity : AppCompatActivity() {
 
     // Basic
     private var isRecording = false
-    private val highlightLength: Int = 10 //TODO: Wybierane w ustawieniach
-    private val chosenTypes =
-        listOf("block", "assist", "two-pointer") //TODO: Wybierane w ustawieniach
+    private var highlightLength: Int = 11
+    private var chosenTypes = listOf("two-pointer", "three-pointer")
 
     // Match
     private var match: Match? = null
@@ -59,6 +59,7 @@ class MatchActivity : AppCompatActivity() {
 
     // Loading animation
     private var popupAnimation: PopupWindow? = null
+
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -140,6 +141,13 @@ class MatchActivity : AppCompatActivity() {
 
         // Create a match record in database
         initializeMatch(matchDescription.toString(), matchPlace.toString())
+
+        // Get highlight length and chosen types
+        highlightLength = intent.getIntExtra("highlightLength", 11)
+        val foundChosenTypes = intent.getStringArrayExtra("chosenTypes")
+        if(foundChosenTypes != null) {
+            chosenTypes = foundChosenTypes.toList()
+        }
 
     }
 
@@ -409,6 +417,7 @@ class MatchActivity : AppCompatActivity() {
             videoName = "trimmed${matchId}_$timestampCounter.mp4"
             timestamp = reportHighlight()
             timestampCounter += 1
+            Toast.makeText(this, "Highlight recorded", Toast.LENGTH_LONG).show()
         }
 
         val move = Move(playersList!![selectedPlayerIndex!!], eventType, true, videoName, timestamp)
@@ -466,7 +475,7 @@ class MatchActivity : AppCompatActivity() {
 
     private fun reportHighlight(): Int {
         val now = UtilityClass.now()
-        val cam = UtilityClass.readTimestamp(this, "camera_start.txt")
+        val cam = UtilityClass.readFile(this, "Timestamps", "camera_start.txt")
         if (cam != null) {
             val diff = UtilityClass.differenceInSeconds(now, cam)
             if (diff >= highlightLength) {

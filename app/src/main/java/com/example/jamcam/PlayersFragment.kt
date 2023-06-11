@@ -76,7 +76,7 @@ class PlayersFragment : Fragment() {
             lastNameEditText.text.clear()
             numberEditText.text.clear()
         } else {
-            Toast.makeText(requireContext(), "Player data is not full", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Player data is incomplete", Toast.LENGTH_LONG).show()
         }
     }
 

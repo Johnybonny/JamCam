@@ -17,6 +17,11 @@ import kotlin.math.round
 
 class UtilityClass {
     companion object {
+        interface FileOperationCallback {
+            fun onFileOperationComplete()
+            fun onFileOperationError(error: Exception)
+        }
+
 
         @JvmStatic
         fun now(): String {
@@ -24,13 +29,12 @@ class UtilityClass {
         }
 
         @JvmStatic
-        fun readTimestamp(context: Context, fileName: String): String? {
+        fun readFile(context: Context, childName: String, fileName: String): String? {
             try {
-                val root = File(context.getExternalFilesDir(null), "Timestamps")
+                val root = File(context.getExternalFilesDir(null), childName)
                 val newFile = File(root, fileName)
                 val reader = BufferedReader(FileReader(newFile))
                 val line: String? = reader.readLine()
-                println("READ: $line")
                 reader.close()
                 if (line != null) {
                     return line
@@ -42,9 +46,9 @@ class UtilityClass {
         }
 
         @JvmStatic
-        fun saveTimestamp(context: Context, fileName: String) {
+        fun saveToFile(context: Context, childName: String, fileName: String, toSave: String) {
             try {
-                val root = File(context.getExternalFilesDir(null), "Timestamps")
+                val root = File(context.getExternalFilesDir(null), childName)
                 if (!root.exists()) {
                     root.mkdirs()
                 }
@@ -54,9 +58,7 @@ class UtilityClass {
                 }
 
                 val writer = FileWriter(newFile)
-                val ts = now()
-                writer.append(ts)
-                println("WRITE: $ts")
+                writer.append(toSave)
                 writer.flush()
                 writer.close()
             } catch (e: IOException) {

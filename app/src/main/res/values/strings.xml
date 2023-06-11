@@ -33,7 +33,15 @@
     <string name="scored">Yes</string>
     <string name="missed">No</string>
     <string name="share_video">Share replay!</string>
-    <string name="loading">Processing the videos...</string>
+    <string name="loading">Processing the videos…</string>
+
+    <!--Setting Activity-->
+    <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Settings</string>
+    <string name="save_settings">Save your settings</string>
+    <string name="select_length">Highlight length</string>
+    <string name="select_type">Types of highlights to save</string>
+    <string name="second">s</string>
 
 
 </resources>

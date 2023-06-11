@@ -20,6 +20,9 @@ class PregameActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener, Pr
     private lateinit var tabLayout: TabLayout
     private var currentTabPosition = 0
 
+    private var highlightLength: Int = 11
+    private var chosenTypes = listOf("two-pointer", "three-pointer")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pregame)
@@ -43,6 +46,12 @@ class PregameActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener, Pr
 
         val startMatchButton: Button = findViewById(R.id.startMatchButton)
         startMatchButton.setOnClickListener { startMatch() }
+
+        highlightLength = intent.getIntExtra("highlightLength", 11)
+        val foundChosenTypes = intent.getStringArrayExtra("chosenTypes")
+        if(foundChosenTypes != null) {
+            chosenTypes = foundChosenTypes.toList()
+        }
 
 
     }
@@ -135,6 +144,8 @@ class PregameActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener, Pr
             intent.putExtra("playersList", ArrayList(playersList))
             intent.putExtra("matchDescription", matchDescription)
             intent.putExtra("matchPlace", matchPlace)
+            intent.putExtra("highlightLength", highlightLength)
+            intent.putExtra("chosenTypes", chosenTypes.toTypedArray())
 
             startActivity(intent)
             finish()

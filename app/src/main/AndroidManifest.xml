@@ -24,12 +24,15 @@
         android:theme="@style/Theme.JamCam"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.jamcam.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
@@ -42,6 +45,7 @@
             android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.OPENABLE" />
 
