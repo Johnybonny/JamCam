@@ -22,6 +22,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.dataclasses.Player
 import com.example.jamcam.videorecorder.BackgroundVideoRecorder
 import com.example.jamcam.videorecorder.VideoEditor
 import java.util.ArrayDeque
@@ -38,8 +39,8 @@ class MatchActivity : AppCompatActivity() {
     private var matchId = 0
 
     // Players
-    private var playersList: MutableList<PlayersFragment.Player>? = mutableListOf()
-    private var selectedPlayer: PlayersFragment.Player? = null
+    private var playersList: MutableList<Player>? = mutableListOf()
+    private var selectedPlayer: Player? = null
     private lateinit var playerSpinner: Spinner
 
     // Timer
@@ -83,7 +84,7 @@ class MatchActivity : AppCompatActivity() {
 
         // Players spinner
         playersList =
-            (intent.getSerializableExtra("playersList") as? ArrayList<PlayersFragment.Player>)
+            (intent.getSerializableExtra("playersList") as? ArrayList<Player>)
         playerSpinner = findViewById(R.id.playerSpinner)
         val players =
             playersList?.map { "${it.firstName} ${it.lastName} (${it.number})" } ?: emptyList()
@@ -183,8 +184,6 @@ class MatchActivity : AppCompatActivity() {
                 player.twoAttempted + player.threeAttempted
             val totalMade =
                 player.twoScored + player.threeScored
-            val totalMissed =
-                totalAttempted - totalMade
 
             //Sum of points
             pointsView.text = totalPoints.toString()
@@ -429,7 +428,8 @@ class MatchActivity : AppCompatActivity() {
                 matchId,
                 eventType,
                 "${playersList!![selectedPlayerIndex].firstName} ${playersList!![selectedPlayerIndex].lastName} (${playersList!![selectedPlayerIndex].number})",
-                videoName
+                videoName,
+                1
             )
             dbHandler.addEvent(event)
         }
@@ -465,7 +465,8 @@ class MatchActivity : AppCompatActivity() {
                 matchId,
                 eventType,
                 "${playersList!![selectedPlayerIndex].firstName} ${playersList!![selectedPlayerIndex].lastName} (${playersList!![selectedPlayerIndex].number})",
-                videoName
+                videoName,
+                0
             )
             dbHandler.addEvent(event)
         }

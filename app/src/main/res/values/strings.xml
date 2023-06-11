@@ -49,5 +49,9 @@
     <string name="click_to_see">Click a match to see details</string>
     <string name="back">Back</string>
 
+    <!---Match Details Activity-->
+    <string name="match_details_title">Manage Games</string>
+    <string name="stats">Here are the key statistics from</string>
+    <string name="watch_highlights">Watch highlights from the match</string>
 
 </resources>

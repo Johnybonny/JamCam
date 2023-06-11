@@ -5,4 +5,5 @@ data class Event (
     var eventType: String,
     var player: String,
     var video: String,
+    var result: Int // 1 or 0
     )

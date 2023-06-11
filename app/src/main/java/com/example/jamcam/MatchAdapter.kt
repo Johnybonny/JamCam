@@ -1,5 +1,6 @@
 package com.example.jamcam
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +19,12 @@ class MatchAdapter(private val matches: List<Match>) : RecyclerView.Adapter<Matc
         holder.dateTextView.text = match.date
 
         holder.itemView.setOnClickListener {
-            // Handle item click event
-            // Open a new activity or fragment to display match details
+            val context = holder.itemView.context
+            val intent = Intent(context, MatchDetailsActivity::class.java)
+            intent.putExtra("description", match.description)
+            intent.putExtra("place", match.place)
+            intent.putExtra("date", match.date)
+            context.startActivity(intent)
         }
     }
 

@@ -68,14 +68,19 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/playerSpinner"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/custom_edit"
-        android:padding="10dp" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp">
+        <Spinner
+            android:id="@+id/playerSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                 this,
-                "Please re-start Open Dash Cam app and grant the requested permissions.",
+                "Please re-start JamCam and grant the requested permissions.",
                 Toast.LENGTH_LONG
             ).show()
         }
