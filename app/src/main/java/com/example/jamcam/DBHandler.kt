@@ -2,8 +2,10 @@ package com.example.jamcam
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 
 class DBHandler(
@@ -145,7 +147,7 @@ class DBHandler(
         return event
     }
 
-    fun getEvent(videoName: String) : Event {
+    fun getEvent(videoName: String): Event {
         val query =
             "SELECT _id, matchid, eventtype, player, video FROM events where video LIKE \"$videoName\""
 
@@ -170,6 +172,45 @@ class DBHandler(
         cursor.close()
         db.close()
         return event
+    }
+
+    fun getEvents(video: String): MutableList<Event> {
+        val query =
+            "SELECT _id, matchid, eventtype, player, video FROM events where video != \"$video\" ORDER BY _id DESC"
+
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        val list: MutableList<Event> = mutableListOf()
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            list.add(
+                Event(
+                    cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                )
+            )
+            cursor.moveToNext()
+        }
+
+        cursor.close()
+        db.close()
+        return list
+    }
+
+    fun resetEventVideo(eventVideo: String) {
+        val query =
+            "UPDATE events SET video = 'no_video' WHERE video LIKE \"$eventVideo\""
+        val db = this.writableDatabase
+        try {
+            db.execSQL(query)
+        } catch (e: SQLException) {
+            // Handle any potential SQL exception
+            Log.e("Database", "Error executing query: $query")
+        } finally {
+            db.close()
+        }
     }
 
     fun deleteEvent(id: Int) {

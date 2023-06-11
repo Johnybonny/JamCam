@@ -86,13 +86,8 @@ class UtilityClass {
                 File(Environment.getExternalStorageDirectory(), folderName)
             }
 
-            // Make sure the path directory exists.
             if (!dir.exists()) {
-                // Make it if it doesn't exist.
                 val success: Boolean = dir.mkdirs()
-//                if (!success) {
-//                    return null
-//                }
             }
             return dir
         }
@@ -101,14 +96,7 @@ class UtilityClass {
         fun createFolderIfNotExists(path: String) {
             val folder = File(path)
             if (!folder.exists()) {
-                val created = folder.mkdir()
-                if (created) {
-                    println("Folder created successfully.")
-                } else {
-                    println("Failed to create the folder.")
-                }
-            } else {
-                println("Folder already exists.")
+                folder.mkdir()
             }
         }
 
