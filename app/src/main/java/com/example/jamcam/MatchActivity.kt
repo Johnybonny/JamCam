@@ -2,6 +2,7 @@ package com.example.jamcam
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,9 +13,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,9 +30,8 @@ class MatchActivity : AppCompatActivity() {
 
     // Basic
     private var isRecording = false
-    private val highlightLength: Int = 10 //TODO: Wybierane w ustawieniach
-    private val chosenTypes =
-        listOf("block", "assist", "two-pointer") //TODO: Wybierane w ustawieniach
+    private var highlightLength: Int = 11
+    private var chosenTypes = listOf("two-pointer", "three-pointer")
 
     // Match
     private var match: Match? = null
@@ -45,10 +47,19 @@ class MatchActivity : AppCompatActivity() {
 
     // Highlights
     private var timestampCounter = 0
+    private var highlightsCompleted = 0
+    private var highlightsCount = 0
 
     // Undo
     private val moves = ArrayDeque<Move>()
     private lateinit var movesAdapter: MovesAdapter
+
+    // Confirm popup
+    private var popupConfirm: PopupWindow? = null
+
+    // Loading animation
+    private var popupAnimation: PopupWindow? = null
+
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -110,16 +121,11 @@ class MatchActivity : AppCompatActivity() {
         endButton.setOnClickListener { stopRecording() }
 
         val onePointerButton: Button = findViewById(R.id.onePointerButton)
-        onePointerButton.setOnClickListener { showPopupWindow(onePointerButton, "one-pointer") }
+        onePointerButton.setOnClickListener { showPopupWindow("one-pointer") }
         val twoPointerButton: Button = findViewById(R.id.twoPointerButton)
-        twoPointerButton.setOnClickListener { showPopupWindow(twoPointerButton, "two-pointer") }
+        twoPointerButton.setOnClickListener { showPopupWindow("two-pointer") }
         val threePointerButton: Button = findViewById(R.id.threePointerButton)
-        threePointerButton.setOnClickListener {
-            showPopupWindow(
-                threePointerButton,
-                "three-pointer"
-            )
-        }
+        threePointerButton.setOnClickListener { showPopupWindow("three-pointer") }
         val assistButton: Button = findViewById(R.id.assistButton)
         assistButton.setOnClickListener { made("assist") }
         val reboundButton: Button = findViewById(R.id.reboundButton)
@@ -136,6 +142,21 @@ class MatchActivity : AppCompatActivity() {
         // Create a match record in database
         initializeMatch(matchDescription.toString(), matchPlace.toString())
 
+        // Get highlight length and chosen types
+        highlightLength = intent.getIntExtra("highlightLength", 11)
+        val foundChosenTypes = intent.getStringArrayExtra("chosenTypes")
+        if(foundChosenTypes != null) {
+            chosenTypes = foundChosenTypes.toList()
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        stopRecording()
+        popupAnimation?.dismiss()
+        popupConfirm?.dismiss()
     }
 
     private fun displayStats() {
@@ -262,11 +283,11 @@ class MatchActivity : AppCompatActivity() {
 
     }
 
-    private fun showPopupWindow(button: Button, eventType: String) {
+    private fun showPopupWindow(eventType: String) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.popup_window, null)
 
-        val popupWindow = PopupWindow(
+        popupConfirm = PopupWindow(
             view,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -277,20 +298,19 @@ class MatchActivity : AppCompatActivity() {
         val scoreButton = view.findViewById<Button>(R.id.scoreButton)
 
         missButton.setOnClickListener {
-            popupWindow.dismiss()
+            popupConfirm!!.dismiss()
             missed(eventType)
         }
 
         scoreButton.setOnClickListener {
-            popupWindow.dismiss()
+            popupConfirm!!.dismiss()
             made(eventType)
         }
 
-//        popupWindow.showAsDropDown(button)
         val parentView = findViewById<View>(android.R.id.content)
         val gravity = Gravity.CENTER
 
-        popupWindow.showAtLocation(parentView, gravity, 0, 0)
+        popupConfirm!!.showAtLocation(parentView, gravity, 0, 0)
     }
 
     private fun undo() {
@@ -397,6 +417,7 @@ class MatchActivity : AppCompatActivity() {
             videoName = "trimmed${matchId}_$timestampCounter.mp4"
             timestamp = reportHighlight()
             timestampCounter += 1
+            Toast.makeText(this, "Highlight recorded", Toast.LENGTH_LONG).show()
         }
 
         val move = Move(playersList!![selectedPlayerIndex!!], eventType, true, videoName, timestamp)
@@ -454,7 +475,7 @@ class MatchActivity : AppCompatActivity() {
 
     private fun reportHighlight(): Int {
         val now = UtilityClass.now()
-        val cam = UtilityClass.readTimestamp(this, "camera_start.txt")
+        val cam = UtilityClass.readFile(this, "Timestamps", "camera_start.txt")
         if (cam != null) {
             val diff = UtilityClass.differenceInSeconds(now, cam)
             if (diff >= highlightLength) {
@@ -506,21 +527,64 @@ class MatchActivity : AppCompatActivity() {
         }
     }
 
-    private fun createHighlights() {
-        val videoEditor = VideoEditor("JamCam", "original.mp4")
-        for (move in moves) {
-            if (move.videoName != "no_video") {
-                val stop = UtilityClass.secondsToTimestamp(move.timestamp)
-                val start = UtilityClass.substractTime(stop, highlightLength)
-                videoEditor.createHighlight(this, start, stop, move.videoName)
-            }
+    private fun showPopupLoading() {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.popup_loading, null)
 
-            // Wait for 1 seconds between highlights trimming
+        popupAnimation = PopupWindow(
+            view,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        val loadingView: ImageView = view.findViewById(R.id.loadingView)
+        val animation: AnimationDrawable = loadingView.drawable as AnimationDrawable
+        animation.start()
+
+        val parentView = findViewById<View>(android.R.id.content)
+        val gravity = Gravity.CENTER
+
+        popupAnimation!!.showAtLocation(parentView, gravity, 0, 0)
+    }
+
+    private fun checkFinish(videoEditor: VideoEditor) {
+        highlightsCompleted += 1
+        if (highlightsCompleted == highlightsCount) {
             val handler = Handler()
             handler.postDelayed({
+                videoEditor.deleteOriginal(this)
+                finish()
             }, 1000)
         }
-        finish()
+    }
+
+    private fun createHighlights() {
+        val videoEditor = VideoEditor("original.mp4")
+        showPopupLoading()
+
+        val movesList = moves.toList()
+
+        // Compute the number of highlights
+        for (moveFromList in movesList) {
+            if (moveFromList.videoName != "no_video") {
+                highlightsCount += 1
+            }
+        }
+
+        for (i in movesList.indices) {
+            val move = movesList[i]
+            if (move.videoName != "no_video") {
+                val handler = Handler()
+                handler.postDelayed({
+                    val stop = UtilityClass.secondsToTimestamp(move.timestamp)
+                    val start = UtilityClass.substractTime(stop, highlightLength)
+                    videoEditor.createHighlight(this, start, stop, move.videoName)
+                    checkFinish(videoEditor)
+                }, 1000 * i.toLong())
+            }
+
+        }
     }
 
 

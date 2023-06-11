@@ -35,45 +35,45 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
 
 
     override fun onCreate() {
-            val handler = Handler()
-            handler.post {
-                // Start foreground service to avoid unexpected kill
-                notificationBuilder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val channelId = NOTIFICATION_CHANNEL_ID
-                    val channelName = "Your Channel Name"
-                    val channel =
-                        NotificationChannel(
-                            channelId,
-                            channelName,
-                            NotificationManager.IMPORTANCE_DEFAULT
-                        )
-                    notificationManager = getSystemService(NotificationManager::class.java)
-                    notificationManager.createNotificationChannel(channel)
+        val handler = Handler()
+        handler.post {
+            // Start foreground service to avoid unexpected kill
+            notificationBuilder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channelId = NOTIFICATION_CHANNEL_ID
+                val channelName = "Your Channel Name"
+                val channel =
+                    NotificationChannel(
+                        channelId,
+                        channelName,
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    )
+                notificationManager = getSystemService(NotificationManager::class.java)
+                notificationManager.createNotificationChannel(channel)
 
-                    Notification.Builder(this, channelId)
-                } else {
-                    Notification.Builder(this)
-                }
+                Notification.Builder(this, channelId)
+            } else {
+                Notification.Builder(this)
+            }
 
-                val notification = notificationBuilder
-                    .setContentTitle("Background Video Recorder")
-                    .setContentText("Recording started")
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    .build()
-                startForeground(NOTIFICATION_ID, notification)
+            val notification = notificationBuilder
+                .setContentTitle("Background Video Recorder")
+                .setContentText("Recording started")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .build()
+            startForeground(NOTIFICATION_ID, notification)
 
-                // Create new SurfaceView, set its size to 1x1, move it to the top left corner and set this service as a callback
-                windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                surfaceView = SurfaceView(this)
-                val layoutParams = WindowManager.LayoutParams(
-                    1, 1,
-                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-                    PixelFormat.TRANSLUCENT
-                )
-                layoutParams.gravity = Gravity.LEFT or Gravity.TOP
-                windowManager.addView(surfaceView, layoutParams)
-                surfaceView.holder.addCallback(this)
+            // Create new SurfaceView, set its size to 1x1, move it to the top left corner and set this service as a callback
+            windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            surfaceView = SurfaceView(this)
+            val layoutParams = WindowManager.LayoutParams(
+                1, 1,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                PixelFormat.TRANSLUCENT
+            )
+            layoutParams.gravity = Gravity.LEFT or Gravity.TOP
+            windowManager.addView(surfaceView, layoutParams)
+            surfaceView.holder.addCallback(this)
         }
     }
 
@@ -105,12 +105,12 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
 
     private fun startRecording(surfaceHolder: SurfaceHolder) {
         println("Start of recording")
-        if(!isRecording){
+        if (!isRecording) {
             initialize(surfaceHolder)
             try {
                 mediaRecorder?.prepare()
                 mediaRecorder?.start()
-                UtilityClass.saveTimestamp(this, "camera_start.txt")
+                UtilityClass.saveToFile(this, "Timestamps", "camera_start.txt", UtilityClass.now())
                 isRecording = true
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -169,7 +169,6 @@ class BackgroundVideoRecorder : Service(), SurfaceHolder.Callback {
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
-
 
 
 }
