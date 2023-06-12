@@ -56,32 +56,37 @@ class PlayersFragment : Fragment() {
 
         if (firstName.isNotEmpty() && lastName.isNotEmpty() && number.isNotEmpty()) {
             if (UtilityClass.isNumeric(number)) {
-                val player = Player(
-                    firstName,
-                    lastName,
-                    number,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0)
-                playersList.add(player)
-                playerAdapter.notifyDataSetChanged()
+                if (UtilityClass.isAlpha(firstName) && UtilityClass.isAlpha(lastName)) {
+                    val player = Player(
+                        firstName,
+                        lastName,
+                        number,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    )
+                    playersList.add(player)
+                    playerAdapter.notifyDataSetChanged()
 
-                // Clear input fields
-                firstNameEditText.text.clear()
-                lastNameEditText.text.clear()
-                numberEditText.text.clear()
+                    // Clear input fields
+                    firstNameEditText.text.clear()
+                    lastNameEditText.text.clear()
+                    numberEditText.text.clear()
+                } else {
+                    Toast.makeText(requireContext(), "Name must be alphanumeric", Toast.LENGTH_LONG)
+                        .show()
+                }
             } else {
                 Toast.makeText(requireContext(), "Number is incorrect", Toast.LENGTH_LONG).show()
             }
-
         } else {
             Toast.makeText(requireContext(), "Player data is incomplete", Toast.LENGTH_LONG).show()
         }
