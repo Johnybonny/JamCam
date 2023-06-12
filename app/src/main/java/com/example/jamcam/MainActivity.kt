@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         val btnStartPregame: ImageButton = findViewById(R.id.btnNewMatch)
         val btnReplays: ImageButton = findViewById(R.id.btnReplays)
         val btnSettings: ImageButton = findViewById(R.id.btnSettings)
+        val btnManage: ImageButton = findViewById(R.id.btnManage)
 
         if (!checkPermissionForSystemAlertWindow()) return
 
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         btnStartPregame.setOnClickListener { startPregame() }
         btnReplays.setOnClickListener { startReplays() }
         btnSettings.setOnClickListener { startSettings() }
+        btnManage.setOnClickListener { startManage() }
     }
 
     private fun convertToString(chosenTypesList: List<String>): String {
@@ -188,7 +190,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                 this,
-                "Please re-start Open Dash Cam app and grant the requested permissions.",
+                "Please re-start JamCam and grant the requested permissions.",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -202,6 +204,11 @@ class MainActivity : AppCompatActivity() {
     private fun startSettings() {
         val intent = Intent(this, SettingsActivity::class.java)
         resultLauncher.launch(intent)
+    }
+
+    private fun startManage() {
+        val intent = Intent(this, ManageActivity::class.java)
+        startActivity(intent)
     }
 
 }

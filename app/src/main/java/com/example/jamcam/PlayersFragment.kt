@@ -12,7 +12,7 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import java.io.Serializable
+import com.example.jamcam.dataclasses.Player
 
 class PlayersFragment : Fragment() {
     private lateinit var playerAdapter: PlayerAdapter
@@ -117,20 +117,4 @@ class PlayersFragment : Fragment() {
         }
     }
 
-    data class Player(
-        val firstName: String,
-        val lastName: String,
-        val number: String, var oneAttempted: Int,
-        var oneScored: Int,
-        var twoAttempted: Int,
-        var twoScored: Int,
-        var threeAttempted: Int,
-        var threeScored: Int,
-        var assists: Int,
-        var blocks: Int,
-        var steals: Int,
-        var fouls: Int,
-        var rebounds: Int
-    ) :
-        Serializable
 }

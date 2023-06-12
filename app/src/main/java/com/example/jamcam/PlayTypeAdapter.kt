@@ -21,27 +21,6 @@ class PlayTypeAdapter(
         return PlayTypeViewHolder(itemView)
     }
 
-//    override fun onBindViewHolder(holder: PlayTypeViewHolder, position: Int) {
-//        val playType = playTypes[position]
-//        holder.playNameTextView.text = playType.name
-//        holder.playCheckBox.isChecked = playType.highlight
-//        holder.playCheckBox.setOnCheckedChangeListener { _, isChecked ->
-//            playType.highlight = isChecked
-//        }
-//    }
-
-//    override fun onBindViewHolder(holder: PlayTypeViewHolder, position: Int) {
-//        val playType = playTypes[position]
-//        holder.playNameTextView.text = playType.name
-//        holder.playCheckBox.isChecked = playType.highlight
-//
-//        holder.playCheckBox.setOnCheckedChangeListener(null) // Remove previous listener to prevent unwanted triggering
-//
-//        holder.playCheckBox.setOnCheckedChangeListener { _, isChecked ->
-//            playType.highlight = isChecked
-//        }
-//    }
-
     override fun onBindViewHolder(holder: PlayTypeViewHolder, position: Int) {
         val playType = playTypes[position]
         holder.playNameTextView.text = playType.name

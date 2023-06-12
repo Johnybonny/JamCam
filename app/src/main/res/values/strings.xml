@@ -46,5 +46,15 @@
     <string name="confirm">Confirm</string>
     <string name="location_address">LOCATION ADDRESS</string>
 
+    <!---Manage Activity-->
+    <string name="manage_title">Manage Games</string>
+    <string name="all_matches">Here are all your games</string>
+    <string name="click_to_see">Click a match to see details</string>
+    <string name="back">Back</string>
+
+    <!---Match Details Activity-->
+    <string name="match_details_title">Manage Games</string>
+    <string name="stats">Here are the key statistics from</string>
+    <string name="watch_highlights">Watch highlights from the match</string>
 
 </resources>

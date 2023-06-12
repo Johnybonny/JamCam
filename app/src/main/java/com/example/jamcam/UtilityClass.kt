@@ -17,11 +17,6 @@ import kotlin.math.round
 
 class UtilityClass {
     companion object {
-        interface FileOperationCallback {
-            fun onFileOperationComplete()
-            fun onFileOperationError(error: Exception)
-        }
-
 
         @JvmStatic
         fun now(): String {
