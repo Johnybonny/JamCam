@@ -108,7 +108,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
 
     private fun quit(result: String?) {
         val returnIntent = Intent()
-        if (result != null) {
+        if (result != null && result != "No address") {
             returnIntent.putExtra("address", result)
         }
         setResult(Activity.RESULT_OK, returnIntent)

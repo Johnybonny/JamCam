@@ -50,7 +50,7 @@
     <string name="second">s</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="location_address">LOCATION ADDRESS</string>
+    <string name="location_address">No address</string>
 
     <!---Manage Activity-->
     <string name="manage_title">Manage Games</string>
