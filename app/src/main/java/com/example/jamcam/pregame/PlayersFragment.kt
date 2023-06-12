@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -37,6 +38,28 @@ class PlayersFragment : Fragment() {
             addPlayer()
         }
 
+        val firstNameEditText: EditText = view.findViewById(R.id.editText_first_name)
+        val numberEditText: EditText = view.findViewById(R.id.editText_number)
+        val lastNameEditText: EditText = view.findViewById(R.id.editText_last_name)
+
+        firstNameEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == 0) {
+                lastNameEditText.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+
+        lastNameEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == 0) {
+                numberEditText.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+
         return view
     }
 
@@ -46,6 +69,7 @@ class PlayersFragment : Fragment() {
 
 
     private fun addPlayer() {
+        println("Hello")
         val firstNameEditText: EditText = requireView().findViewById(R.id.editText_first_name)
         val lastNameEditText: EditText = requireView().findViewById(R.id.editText_last_name)
         val numberEditText: EditText = requireView().findViewById(R.id.editText_number)
