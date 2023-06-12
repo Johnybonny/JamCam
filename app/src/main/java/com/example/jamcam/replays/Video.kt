@@ -1,4 +1,4 @@
-package com.example.jamcam.videoplayer
+package com.example.jamcam.replays
 
 class Video(
     var title: String,

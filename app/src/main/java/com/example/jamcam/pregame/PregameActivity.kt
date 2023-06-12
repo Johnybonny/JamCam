@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.pregame
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.example.jamcam.match.MatchActivity
+import com.example.jamcam.R
 import com.google.android.material.tabs.TabLayout
 
-class PregameActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener, PregameFormFragment.MoveRightListener {
+class PregameActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener,
+    PregameFormFragment.MoveRightListener {
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout

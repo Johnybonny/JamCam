@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.manage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,11 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
+import com.example.jamcam.R
+import com.example.jamcam.replays.ReplaysActivity
+import com.example.jamcam.UtilityClass
+import com.example.jamcam.database.DBHandler
+import com.example.jamcam.database.Event
 import com.example.jamcam.dataclasses.Player
 
 class MatchDetailsActivity : AppCompatActivity() {

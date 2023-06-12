@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.database
 
 data class Match(
     var description: String,

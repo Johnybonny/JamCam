@@ -1,4 +1,4 @@
-package com.example.jamcam.videoplayer
+package com.example.jamcam.replays
 
 import android.content.Context
 import android.net.Uri

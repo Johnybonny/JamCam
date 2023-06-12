@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.replays
 
 import android.content.Intent
 import android.net.Uri
@@ -9,10 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.example.jamcam.R
+import com.example.jamcam.database.DBHandler
+import com.example.jamcam.database.Event
 import com.example.jamcam.databinding.ActivityReplaysBinding
-import com.example.jamcam.videoplayer.ExoPlayerItem
-import com.example.jamcam.videoplayer.Video
-import com.example.jamcam.videoplayer.VideoAdapter
 import java.io.File
 
 class ReplaysActivity : AppCompatActivity() {

@@ -1,10 +1,13 @@
-package com.example.jamcam
+package com.example.jamcam.manage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.R
+import com.example.jamcam.database.DBHandler
+import com.example.jamcam.database.Match
 
 class ManageActivity : AppCompatActivity() {
 

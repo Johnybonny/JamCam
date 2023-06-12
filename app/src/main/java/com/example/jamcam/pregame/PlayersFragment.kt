@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.pregame
 
 import android.content.Context
 import android.os.Bundle
@@ -12,6 +12,7 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.jamcam.R
 import com.example.jamcam.dataclasses.Player
 
 class PlayersFragment : Fragment() {

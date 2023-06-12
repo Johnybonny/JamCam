@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.pregame
 
 import android.app.Activity
 import android.content.Context
@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.jamcam.R
 
 class PregameFormFragment : Fragment() {
 

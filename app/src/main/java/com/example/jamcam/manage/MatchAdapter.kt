@@ -1,9 +1,12 @@
-package com.example.jamcam
+package com.example.jamcam.manage
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.R
+import com.example.jamcam.database.Match
+import com.example.jamcam.match.MatchViewHolder
 
 class MatchAdapter(private val matches: List<Match>) : RecyclerView.Adapter<MatchViewHolder>() {
 

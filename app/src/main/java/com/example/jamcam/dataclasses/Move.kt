@@ -1,6 +1,4 @@
-package com.example.jamcam
-
-import com.example.jamcam.dataclasses.Player
+package com.example.jamcam.dataclasses
 
 data class Move (
     var player: Player,

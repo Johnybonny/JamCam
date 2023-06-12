@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.match
 
 import android.content.Context
 import android.content.Intent
@@ -22,6 +22,12 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.R
+import com.example.jamcam.UtilityClass
+import com.example.jamcam.database.DBHandler
+import com.example.jamcam.database.Event
+import com.example.jamcam.database.Match
+import com.example.jamcam.dataclasses.Move
 import com.example.jamcam.dataclasses.Player
 import com.example.jamcam.videorecorder.BackgroundVideoRecorder
 import com.example.jamcam.videorecorder.VideoEditor

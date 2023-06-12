@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.match
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.R
+import com.example.jamcam.dataclasses.Move
 
 class MovesAdapter(var moves: List<Move>) : RecyclerView.Adapter<MovesAdapter.MoveViewHolder>() {
 

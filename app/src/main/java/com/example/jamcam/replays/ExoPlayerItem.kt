@@ -1,4 +1,4 @@
-package com.example.jamcam.videoplayer
+package com.example.jamcam.replays
 
 import com.google.android.exoplayer2.ExoPlayer
 

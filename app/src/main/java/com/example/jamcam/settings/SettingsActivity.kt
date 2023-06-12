@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.settings
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamcam.R
+import com.example.jamcam.UtilityClass
 import com.example.jamcam.dataclasses.PlayType
 
 class SettingsActivity : AppCompatActivity() {

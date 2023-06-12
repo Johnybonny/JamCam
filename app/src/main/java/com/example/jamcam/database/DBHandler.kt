@@ -1,4 +1,4 @@
-package com.example.jamcam
+package com.example.jamcam.database
 
 import android.content.ContentValues
 import android.content.Context
