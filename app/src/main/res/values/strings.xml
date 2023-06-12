@@ -34,10 +34,10 @@
     <string name="missed">No</string>
     <string name="share_video">Share replay!</string>
     <string name="loading">Processing the videos…</string>
+    <string name="content_description">basketball progress bar</string>
 
-    <!--Setting Activity-->
+    <!--Settings Activity-->
     <string name="settings_title">Settings</string>
-    <string name="settings_subtitle">Settings</string>
     <string name="save_settings">Save your settings</string>
     <string name="select_length">Highlight length</string>
     <string name="select_type">Types of highlights to save</string>
@@ -56,5 +56,6 @@
     <string name="match_details_title">Manage Games</string>
     <string name="stats">Here are the key statistics from</string>
     <string name="watch_highlights">Watch highlights from the match</string>
+
 
 </resources>
