@@ -8,7 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="30dp"
-    tools:context=".PregameActivity">
+    tools:context=".pregame.PregameActivity">
 
 
     <LinearLayout

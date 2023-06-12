@@ -19,6 +19,17 @@ class UtilityClass {
     companion object {
 
         @JvmStatic
+        fun isAlpha(input: String): Boolean {
+            val regex = Regex("^\\p{L}+$")
+            return regex.matches(input)
+        }
+
+        @JvmStatic
+        fun isNumeric(input: String): Boolean {
+            return input.toDoubleOrNull() != null
+        }
+
+        @JvmStatic
         fun now(): String {
             return DateFormat.format("yyyy-MM-dd_kk-mm-ss", Date().time).toString()
         }

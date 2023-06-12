@@ -28,7 +28,6 @@
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="15"
-                android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -41,7 +40,6 @@
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="15"
-                android:text="Description"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </LinearLayout>

@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">JamCam</string>
     <string name="logo">logo</string>
-    <string name="new_match">new match</string>
-    <string name="replays">replays</string>
+
+    <!--Main activity-->
+    <string name="new_match">NEW MATCH</string>
+    <string name="replays">REPLAYS</string>
+    <string name="manage">MANAGE</string>
+    <string name="settings">SETTINGS</string>
+    <string name="logo_description">Basketball logo</string>
+
 
     <!--Pregame activity-->
     <string name="pregame_title">Pre-match preparation</string>
@@ -34,17 +40,17 @@
     <string name="missed">No</string>
     <string name="share_video">Share replay!</string>
     <string name="loading">Processing the videos…</string>
+    <string name="content_description">basketball progress bar</string>
 
-    <!--Setting Activity-->
+    <!--Settings Activity-->
     <string name="settings_title">Settings</string>
-    <string name="settings_subtitle">Settings</string>
     <string name="save_settings">Save your settings</string>
     <string name="select_length">Highlight length</string>
     <string name="select_type">Types of highlights to save</string>
     <string name="second">s</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="location_address">LOCATION ADDRESS</string>
+    <string name="location_address">No address</string>
 
     <!---Manage Activity-->
     <string name="manage_title">Manage Games</string>
@@ -55,6 +61,7 @@
     <!---Match Details Activity-->
     <string name="match_details_title">Manage Games</string>
     <string name="stats">Here are the key statistics from</string>
-    <string name="watch_highlights">Watch highlights from the match</string>
+    <string name="watch_highlights">Highlights</string>
+
 
 </resources>

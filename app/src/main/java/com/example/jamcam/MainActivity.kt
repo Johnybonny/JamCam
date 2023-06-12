@@ -15,6 +15,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.jamcam.manage.ManageActivity
+import com.example.jamcam.pregame.PregameActivity
+import com.example.jamcam.replays.ReplaysActivity
+import com.example.jamcam.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
