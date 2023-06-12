@@ -1,5 +1,6 @@
 package com.example.jamcam
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -60,6 +61,14 @@ class MatchDetailsActivity : AppCompatActivity() {
         // Back button
         val backButton: Button = findViewById(R.id.backButton)
         backButton.setOnClickListener { finish() }
+
+        // Highlights button
+        val highlightsButton: Button = findViewById(R.id.watchButton)
+        highlightsButton.setOnClickListener {
+            val intent = Intent(this, ReplaysActivity::class.java)
+            intent.putExtra("match_id", matchId)
+            startActivity(intent)
+        }
 
         // Players spinner
         playersList = computePlayersList()

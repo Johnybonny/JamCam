@@ -55,7 +55,6 @@
         <activity
             android:name=".ReplaysActivity"
             android:exported="true"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />

@@ -26,6 +26,9 @@ class ReplaysActivity : AppCompatActivity() {
         binding = ActivityReplaysBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val intent = intent
+        val matchId = intent.getIntExtra("match_id", -1)
+
         binding.fabBack.setOnClickListener {
             finish()
         }
@@ -43,7 +46,11 @@ class ReplaysActivity : AppCompatActivity() {
         val replayDirectory = File(path)
         if (replayDirectory.exists() && replayDirectory.isDirectory) {
             val dbHandler = DBHandler(this, null, null, 1)
-            val events = dbHandler.getEvents("no_video")
+            val events: List<Event> = if(matchId != -1) {
+                dbHandler.getEvents("no_video", matchId)
+            } else {
+                dbHandler.getEvents("no_video")
+            }
             for(event: Event in events) {
                 val videoName = event.video
 

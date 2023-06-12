@@ -286,7 +286,33 @@ class DBHandler(
 
     fun getEvents(video: String): MutableList<Event> {
         val query =
-            "SELECT * FROM events where video != \"$video\" ORDER BY _id DESC"
+            "SELECT * FROM events WHERE video != \"$video\" ORDER BY _id DESC"
+
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        val list: MutableList<Event> = mutableListOf()
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            list.add(
+                Event(
+                    cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getInt(5)
+                )
+            )
+            cursor.moveToNext()
+        }
+
+        cursor.close()
+        db.close()
+        return list
+    }
+
+    fun getEvents(video: String, matchId: Int): MutableList<Event> {
+        val query =
+            "SELECT * FROM events where video != \"$video\" AND matchid = $matchId ORDER BY _id DESC"
 
         val db = this.writableDatabase
         val cursor = db.rawQuery(query, null)
