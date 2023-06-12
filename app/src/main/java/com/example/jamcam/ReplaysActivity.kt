@@ -45,7 +45,6 @@ class ReplaysActivity : AppCompatActivity() {
             val dbHandler = DBHandler(this, null, null, 1)
             val events = dbHandler.getEvents("no_video")
             for(event: Event in events) {
-                println(event.video)
                 val videoName = event.video
 
                 val regex = Regex("""\d+(?=\D)""")
