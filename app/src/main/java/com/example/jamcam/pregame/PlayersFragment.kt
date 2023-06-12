@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.jamcam.R
+import com.example.jamcam.UtilityClass
 import com.example.jamcam.dataclasses.Player
 
 class PlayersFragment : Fragment() {
@@ -54,28 +55,33 @@ class PlayersFragment : Fragment() {
         val number = numberEditText.text.toString().trim()
 
         if (firstName.isNotEmpty() && lastName.isNotEmpty() && number.isNotEmpty()) {
-            val player = Player(
-                firstName,
-                lastName,
-                number,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0)
-            playersList.add(player)
-            playerAdapter.notifyDataSetChanged()
+            if (UtilityClass.isNumeric(number)) {
+                val player = Player(
+                    firstName,
+                    lastName,
+                    number,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0)
+                playersList.add(player)
+                playerAdapter.notifyDataSetChanged()
 
-            // Clear input fields
-            firstNameEditText.text.clear()
-            lastNameEditText.text.clear()
-            numberEditText.text.clear()
+                // Clear input fields
+                firstNameEditText.text.clear()
+                lastNameEditText.text.clear()
+                numberEditText.text.clear()
+            } else {
+                Toast.makeText(requireContext(), "Number is incorrect", Toast.LENGTH_LONG).show()
+            }
+
         } else {
             Toast.makeText(requireContext(), "Player data is incomplete", Toast.LENGTH_LONG).show()
         }
