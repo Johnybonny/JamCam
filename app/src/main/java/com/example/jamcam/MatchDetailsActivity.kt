@@ -96,6 +96,10 @@ class MatchDetailsActivity : AppCompatActivity() {
         val dbHandler = DBHandler(this, null, null, 1)
         playersList = dbHandler.getPlayersList(matchId)
 
+        val modifiedList = mutableListOf<Player>()
+        modifiedList.add(0, team)
+        modifiedList.addAll(playersList!!)
+
         for (player in playersList!!) {
             val playerEvents: MutableList<Event> = dbHandler.getMatchPlayerEvents(
                 matchId,
@@ -157,9 +161,7 @@ class MatchDetailsActivity : AppCompatActivity() {
                 }
             }
         }
-        playersList!!.add(0, team)
-
-        return playersList
+        return modifiedList
     }
 
     private fun displayStats() {
