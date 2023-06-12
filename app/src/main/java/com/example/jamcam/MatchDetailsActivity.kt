@@ -54,7 +54,7 @@ class MatchDetailsActivity : AppCompatActivity() {
 
         // Set title
         val title: TextView = findViewById(R.id.title)
-        title.text = "Here are the key statistics from $description"
+        title.text = description
         getMatchId()
 
         // Back button
