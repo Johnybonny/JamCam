@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PregameFormFragment"
-    android:orientation="vertical">
-
-
+    android:orientation="vertical"
+    tools:context=".PregameFormFragment">
 
 
     <EditText
@@ -23,17 +22,19 @@
         android:paddingEnd="15dp"/>
 
     <EditText
-        android:id="@+id/placeEditText"
+        android:id="@+id/etPlace"
+        android:inputType="none"
+        android:focusable="false"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_margin="10dp"
+        android:layout_weight="1"
         android:background="@drawable/custom_edit"
-        android:hint="@string/match_place"
-        android:drawableStart="@drawable/location_vec"
         android:drawablePadding="10dp"
         android:paddingStart="15dp"
-        android:paddingEnd="15dp"/>
+        android:paddingEnd="15dp"
+        android:hint="@string/match_place"
+        app:drawableStartCompat="@drawable/location_vec" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/moveRightButton"
