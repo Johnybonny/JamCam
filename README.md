@@ -16,11 +16,7 @@ App creators:
   <img src="/screenshots/home_page.jpeg" width="300" />
   <img src="/screenshots/pre-match.jpeg" width="300" /> 
   <img src="/screenshots/game.jpeg" width="300" />
-</p>
-
-
-<p float="center">
-  <img src="/screenshots/settings.jpeg" width="300" />
+    <img src="/screenshots/settings.jpeg" width="300" />
   <img src="/screenshots/manage_games.jpeg" width="300" /> 
 </p>
 
