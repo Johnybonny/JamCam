@@ -8,8 +8,8 @@ JamCam runs on Android devices with Sdk at least 21.
 The app was created for mobile applications classes at 3rd year of Compuer Science studies at Poznań University of Technology.
 
 App creators:
-* Filip Marciniak
-* Szymon Pasternak
+* <a rel="Filip Marciniak" href="https://github.com/anras5">Filip Marciniak</a>
+* <a rel="Szymon Pasternak" href="https://github.com/Johnybonny">Szymon Pasternak</a>
 
 ## How does the app look like
 <p float="center">
